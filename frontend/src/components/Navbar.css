@@ -1,0 +1,33 @@
+/* Navbar.css */
+.navbar {
+    width: 100%; /* Make the navbar span the full width of the page */
+    background-color: white; /* Give it a background color */
+    position: fixed; /* Fix it to the top of the page */
+    top: 0; /* Position it at the very top */
+    z-index: 1000; /* Ensure it's above other content */
+}
+
+.navbar ul {
+    list-style-type: none; /* Remove list bullets */
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.navbar li {
+    float: left; /* Position list items in a row */
+}
+
+.navbar li a {
+    display: block; /* Expand the clickable area to the entire list item */
+    color: white; /* Text color */
+    text-align: center; /* Center the text */
+    padding: 14px 16px; /* Add some padding */
+    text-decoration: none; /* Remove underlines from links */
+}
+
+/* Change the link color on hover */
+.navbar li a:hover {
+    background-color: #ddd;
+    color: black;
+}
