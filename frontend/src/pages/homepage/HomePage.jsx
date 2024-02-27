@@ -11,14 +11,20 @@ function HomePage() {
     }, []);
 
     return (
-        <div className="App">
+        <div className="Homepage">
             <header className="App-header">
                 <h1>Missing Women</h1>
-                <ul>
+                <div>
                     {women.map(woman => (
-                        <li key={woman.id}>{woman.name}</li>
+                        <div key={woman.id}>
+                            <h2>{woman.name}</h2>
+                            <p><strong>Last Seen:</strong> {woman.last_seen_date}</p>
+                            <p><strong>Description:</strong> {woman.description}</p>
+                            <p><strong>Other Details:</strong> {woman.other_details}</p>
+                            {/* Add other details as needed */}
+                        </div>
                     ))}
-                </ul>
+                </div>
             </header>
         </div>
     );

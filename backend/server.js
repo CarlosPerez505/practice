@@ -1,6 +1,7 @@
 import express from 'express';
 import mysql from 'mysql2';
 import cors from 'cors';
+import morgan from 'morgan';
 
 
 // Initialize MySQL connection
@@ -24,8 +25,49 @@ db.connect((err) => {
 const app = express();
 app.use(cors());
 app.use(express.json()); // Middleware to parse JSON request bodies
+app.use(morgan('dev'));
 
 
+// This will log every request that comes into your server.
+app.use((req, res, next) => {
+    console.log(`Received ${req.method} request for '${req.url}'`);
+    console.log(req.path)
+    next();
+});
+
+
+
+
+//A generic error handler that will catch any errors thrown in the application.
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ error: 'Internal Server Error' });
+});
+
+
+app.get(`/api/missing_cases/search`, (req, res) => {
+    const searchTerm = req.query.term;
+    if (!searchTerm) {
+        return res.status(400).json({ error: 'Search term is required' });
+    }
+
+    console.log(searchTerm)
+
+
+    const formattedSearchTerm = `%${searchTerm}%`;
+    console.log(formattedSearchTerm)
+
+    // Use % to match any sequence of characters in SQL LIKE operator
+    const query = 'SELECT * FROM missing_cases WHERE LOWER(name) LIKE LOWER(?)';
+
+    db.query(query,  [formattedSearchTerm], (err, results) => {
+        if (err) {
+            console.error('Error searching in database:', err);
+            return res.status(500).json({ error: 'Error during search' });
+        }
+        res.json(results);
+    });
+});
 
 // POST endpoint to add a new missing case
 app.post('/api/missing_cases', (req, res) => {
@@ -113,6 +155,7 @@ app.delete('/api/missing_cases/:id', (req, res) => {
     // SQL query to delete a missing case by ID
     const query = 'DELETE FROM missing_cases WHERE id = ?';
 
+
     // Execute the query
     db.query(query, [id], (err, result) => {
         if (err) {
@@ -127,6 +170,18 @@ app.delete('/api/missing_cases/:id', (req, res) => {
     });
 });
 
+
+
+//temporary endpoint
+app.get('/test', (req, res) => {
+    res.json({ message: 'Test endpoint reached' });
+});
+
+
+// This will catch any requests to endpoints that don't exist in your application.
+app.all('*', (req, res) => {
+    res.status(404).json({ error: 'Endpoint not found' });
+});
 
 
 // Start the server on the specified port

@@ -1,20 +1,31 @@
-// src/pages/UpdatePage.jsx
 import React, { useState } from 'react';
+import './UpdatePage.css';
+import SearchCases from "../../components/SearchCases/SearchCases.jsx";
 
 function UpdatePage() {
+    // Initialize formData with the structure of your case object
     const [formData, setFormData] = useState({
-        id: '', // Assuming you're updating by ID
+        id: '',
         name: '',
-        lastSeenDate: '',
+        lastSeenDate: '', // Make sure the names match your database columns
         description: '',
     });
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prevState => ({
-            ...prevState,
-            [name]: value,
-        }));
+    // State hooks for UI feedback messages
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+    const [showErrorMessage, setShowErrorMessage] = useState(false);
+
+    const handleSelectCase = (caseItem) => {
+        // Update formData with the selected case details
+        setFormData({
+            id: caseItem.id,
+            name: caseItem.name,
+            lastSeenDate: caseItem.last_seen_date, // Ensure this matches your data structure
+            description: caseItem.description,
+        });
+        // Reset the success and error messages when a new case is selected
+        setShowSuccessMessage(false);
+        setShowErrorMessage(false);
     };
 
     const handleSubmit = (e) => {
@@ -33,17 +44,36 @@ function UpdatePage() {
             .then(response => response.json())
             .then(data => {
                 console.log('Success:', data);
-                // Handle success, maybe clear the form or show a success message
+                setShowSuccessMessage(true);
+                setShowErrorMessage(false);
+                // Optionally, clear the form or reset to initial state
+                setFormData({
+                    id: '',
+                    name: '',
+                    lastSeenDate: '',
+                    description: '',
+                });
             })
             .catch((error) => {
                 console.error('Error:', error);
-                // Handle errors, possibly show an error message to the user
+                setShowErrorMessage(true);
+                setShowSuccessMessage(false);
             });
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prevState => ({
+            ...prevState,
+            [name]: value,
+        }));
     };
 
     return (
         <div>
             <h1>Update Missing Case</h1>
+            {showSuccessMessage && <div className="success-message">Case updated successfully!</div>}
+            {showErrorMessage && <div className="error-message">Error updating case. Please try again.</div>}
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
@@ -76,6 +106,7 @@ function UpdatePage() {
                 />
                 <button type="submit">Update</button>
             </form>
+            <SearchCases onSelectCase={handleSelectCase} />
         </div>
     );
 }

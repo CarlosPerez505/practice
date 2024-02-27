@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/homepage/HomePage.jsx'; // Adjust the import path as necessary
 import UpdatePage from './pages/updatepage/UpdatePage.jsx'; // Adjust the import path as necessary
-import Navbar from "./components/Navbar.jsx";
+import Navbar from "./components/navbar/Navbar.jsx";
 
 function App() {
     return (
