@@ -144,7 +144,7 @@ function CreateMissingCase() {
         <div>
             <h1>Create Missing Case</h1>
             {showSuccessMessage && <div className="success-message">Case updated successfully!</div>}
-            {showErrorMessage && <div className="error-message">Error updating case. Please try again.</div>}
+            {showErrorMessage && <div className="error-message">Error creating missing case. Please try again.</div>}
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
                     <label htmlFor="name">Name</label>

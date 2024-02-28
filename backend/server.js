@@ -28,7 +28,7 @@ app.use(express.json()); // Middleware to parse JSON request bodies
 app.use(morgan('dev'));
 
 
-// This will log every request that comes into your server.
+// This will log every request that comes into your server/ middleware.
 app.use((req, res, next) => {
     console.log(`Received ${req.method} request for '${req.url}'`);
     console.log(req.path)
@@ -42,36 +42,6 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({ error: 'Internal Server Error' });
-});
-
-app.patch('/api/missingCases/:id', (req, res) => {
-    // Extract the case ID from the URL parameter
-    const { id } = req.params;
-
-    // Extract fields from the request body
-    const {name, age, lastSeenDate, lastSeenLocation, description, reportedDate } = req.body;
-
-    // Prepare the SQL query to update the missing case
-    const query = `
-        UPDATE missingCases SET
-        age = COALESCE(?, age),
-        lastSeenDate = COALESCE(?, lastSeenDate),
-        lastSeenLocation = COALESCE(?, lastSeenLocation),
-        description = COALESCE(?, description),
-        reportedDate = COALESCE(?, reportedDate)
-        WHERE id = ?`;
-
-    // Execute the query
-    db.query(query, [name, age, lastSeenDate, lastSeenLocation, description, reportedDate, id], (err, result) => {
-        if (err) {
-            console.error('Error updating database:', err);
-            return res.status(500).json({ error: 'Failed to update the database' });
-        }
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'No such case found' });
-        }
-        res.status(200).json({ message: 'Entry updated successfully' });
-    });
 });
 
 
@@ -158,28 +128,38 @@ app.get('/api/missingCases/:id', (req, res) => {
     });
 });
 
-// PUT endpoint to update an existing missing case by ID
-app.put('/api/missingCases/:id', (req, res) => {
-    // Extract ID and updated details from the request
+// PATCH endpoint to update an existing missing case by ID (replacing the PUT method for partial updates)
+app.patch('/api/missingCases/:id', (req, res) => {
+    // Extract the case ID from the URL parameter
     const { id } = req.params;
-    const { name, age, lastSeenDate, lastSeenLocation, description, reportedDate } = req.body;
 
-    // SQL query to update a missing case
-    const query = 'UPDATE missingCases SET name = ?, age = ?, lastSeenDate = ?, lastSeenLocation = ?, description = ?, reportedDate WHERE id = ?';
+    // Extract fields from the request body
+    const {name, age, lastSeenDate, lastSeenLocation, description, reportedDate } = req.body;
+
+    // Prepare the SQL query to update the missing case
+    const query = `
+        UPDATE missingCases SET
+        age = COALESCE(?, age),
+        lastSeenDate = COALESCE(?, lastSeenDate),
+        lastSeenLocation = COALESCE(?, lastSeenLocation),
+        description = COALESCE(?, description),
+        reportedDate = COALESCE(?, reportedDate)
+        WHERE id = ?`;
 
     // Execute the query
     db.query(query, [name, age, lastSeenDate, lastSeenLocation, description, reportedDate, id], (err, result) => {
         if (err) {
             console.error('Error updating database:', err);
-            return res.status(500).json({ error: 'Failed to update the entry' });
+            return res.status(500).json({ error: 'Failed to update the database' });
         }
         if (result.affectedRows === 0) {
-            // If no rows were affected, the entry was not found
-            return res.status(404).json({ error: 'Entry not found' });
+            return res.status(404).json({ message: 'No such case found' });
         }
-        res.json({ message: 'Entry updated successfully' });
+        res.status(200).json({ message: 'Entry updated successfully' });
     });
 });
+
+
 
 // DELETE endpoint to remove a missing case by ID
 app.delete('/api/missingCases/:id', (req, res) => {

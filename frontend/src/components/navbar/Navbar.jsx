@@ -20,11 +20,27 @@ function Navbar() {
         );
     }
 
+
+    if (['/'].includes(location.pathname.toLowerCase())) {
+        return (
+            <nav style={{ padding: '10px', background: '#f0f0f0' }}>
+                <Link to="/" style={{ marginRight: '10px' }}>Home</Link>
+                <Link to="/admin/create">Admin</Link> {/* Adjust the link as needed */}
+            </nav>
+        );
+    }
+
+
+
+
+
+
     // Default Navbar content for other pages
     return (
         <nav className="navbar">
             <Link to="/" style={{ marginRight: '10px' }}>Home</Link>
-            <Link to="/admin">Admin</Link>
+            <Link to="/admin/create">Admin</Link>
+            <Link to="/admin/update">Update</Link>
             {/* Add other links as needed */}
         </nav>
     );
