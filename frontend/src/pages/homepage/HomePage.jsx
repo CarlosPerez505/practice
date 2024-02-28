@@ -4,7 +4,7 @@ function HomePage() {
     const [women, setWomen] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:5000/api/missing_cases')
+        fetch('http://localhost:5000/api/missingCases')
             .then(response => response.json())
             .then(data => setWomen(data))
             .catch(error => console.error('Error fetching data:', error));
@@ -18,9 +18,11 @@ function HomePage() {
                     {women.map(woman => (
                         <div key={woman.id}>
                             <h2>{woman.name}</h2>
-                            <p><strong>Last Seen:</strong> {woman.last_seen_date}</p>
+                            <p><strong>Age:</strong> {woman.age}</p>
+                            <p><strong>Last Seen date:</strong> {woman.lastSeenDate}</p>
+                            <p><strong>Last seen location:</strong> {woman.lastSeenLocation}</p>
                             <p><strong>Description:</strong> {woman.description}</p>
-                            <p><strong>Other Details:</strong> {woman.other_details}</p>
+                            <p><strong>Reported Date:</strong> {woman.reportedDate}</p>
                             {/* Add other details as needed */}
                         </div>
                     ))}

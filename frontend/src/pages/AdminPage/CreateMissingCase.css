@@ -1,0 +1,47 @@
+
+/* If you want the form itself to not stretch too wide */
+form {
+    width: 100%; /* You can set a max-width if you want */
+    max-width: 600px; /* Example max-width */
+    margin: 0 auto; /* This will center the form if flexbox is not used */
+}
+
+
+/* Style your input fields and text area */
+input, textarea {
+    padding: 10px;
+    margin-top: 5px; /* Space between label and input field */
+    width: 100%;     /* Match width of parent .form-group */
+}
+
+/* Additional styling for the button */
+button {
+    padding: 10px 20px;
+    margin-top: 20px; /* Add space above the button */
+    cursor: pointer;
+}
+
+/* If you want to make it responsive, you can add media queries like this:
+@media (max-width: 768px) {
+  .form-group {
+    width: 90%; // Example of making the form narrower on smaller screens
+  }
+}
+*/
+
+/* Apply error message styling as required */
+.error-message {
+    color: red;
+    margin-top: 5px;
+}
+
+/* Apply success message styling as required */
+.success-message {
+    color: green;
+    margin-top: 5px;
+}
+
+h1 {
+    text-align: center; /* This will center the text within the h1 */
+    width: 100%; /* Ensure the h1 takes up the full width */
+}

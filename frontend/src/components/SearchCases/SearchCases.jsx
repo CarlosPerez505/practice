@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './SearchCases.css'
 
 function SearchCases({ onSelectCase }) {
     const [searchTerm, setSearchTerm] = useState('');
@@ -11,7 +12,7 @@ function SearchCases({ onSelectCase }) {
 
     const handleSearch = () => {
         console.log("Searching for:", searchTerm);
-        fetch('http://localhost:5000/api/missing_cases/search?term=' + encodeURIComponent(searchTerm))
+        fetch('http://localhost:5000/api/missingCases/search?term=' + encodeURIComponent(searchTerm))
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`Network response was not ok: ${response.status}`);
@@ -40,7 +41,7 @@ function SearchCases({ onSelectCase }) {
             <ul>
                 {cases.map((caseItem) => (
                     <li key={caseItem.id} onClick={() => onSelectCase(caseItem)}>
-                        {caseItem.name} - {caseItem.last_seen_date}
+                        {caseItem.name} - {caseItem.age} - {caseItem.lastSeenDate} - {caseItem.lastSeenLocation} - {caseItem.description} - {caseItem.reportedDate}
                     </li>
                 ))}
             </ul>

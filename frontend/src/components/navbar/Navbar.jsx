@@ -24,7 +24,7 @@ function Navbar() {
     return (
         <nav className="navbar">
             <Link to="/" style={{ marginRight: '10px' }}>Home</Link>
-            <Link to="/update">Update</Link>
+            <Link to="/admin">Admin</Link>
             {/* Add other links as needed */}
         </nav>
     );
