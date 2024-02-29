@@ -11,7 +11,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/admin/create" element={<CreateMissingCase />} />
-                <Route path="/admin/update" element={<UpdateForm />} />,
+                <Route path="/admin/update/:id" element={<UpdateForm />} />
                 {/* Define other routes here */}
             </Routes>
         </Router>

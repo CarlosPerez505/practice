@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom'; // Make sure to import Link from react-router-dom
 import './SearchCases.css'
 
 function SearchCases({ onSelectCase }) {
@@ -42,6 +43,7 @@ function SearchCases({ onSelectCase }) {
                 {cases.map((caseItem) => (
                     <li key={caseItem.id} onClick={() => onSelectCase(caseItem)}>
                         {caseItem.name} - {caseItem.age} - {caseItem.lastSeenDate} - {caseItem.lastSeenLocation} - {caseItem.description} - {caseItem.reportedDate}
+                        <Link to={`/admin/update/${caseItem.id}`}>Edit</Link>
                     </li>
                 ))}
             </ul>
