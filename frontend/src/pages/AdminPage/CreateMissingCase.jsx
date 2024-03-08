@@ -141,7 +141,8 @@ function CreateMissingCase() {
 
 
     return (
-        <div>
+        <div className="mc-form-container">
+            <SearchCases onSelectCase={handleSelectCase} />
             <h1>Create Missing Case</h1>
             {showSuccessMessage && <div className="success-message">Case updated successfully!</div>}
             {showErrorMessage && <div className="error-message">Error creating missing case. Please try again.</div>}
@@ -212,9 +213,9 @@ function CreateMissingCase() {
                     />
                     {formErrors.reportedDate && <div className="error-message">{formErrors.reportedDate}</div>}
                 </div>
-                <button type="submit">Create</button>
+                <button className="createButton" type="submit">Create</button>
             </form>
-            <SearchCases onSelectCase={handleSelectCase} />
+
         </div>
 
     );

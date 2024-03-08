@@ -1,4 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import Map from "../../components/map/Map.jsx";
+import Carousel from '../../components/carousel/Carousel.jsx'
+import './HomePage.css'
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 function HomePage() {
     const [women, setWomen] = useState([]);
@@ -10,23 +15,13 @@ function HomePage() {
             .catch(error => console.error('Error fetching data:', error));
     }, []);
 
+
     return (
         <div className="Homepage">
+           <Map/>
             <header className="App-header">
                 <h1>Missing Women</h1>
-                <div>
-                    {women.map(woman => (
-                        <div key={woman.id}>
-                            <h2>{woman.name}</h2>
-                            <p><strong>Age:</strong> {woman.age}</p>
-                            <p><strong>Last Seen date:</strong> {woman.lastSeenDate}</p>
-                            <p><strong>Last seen location:</strong> {woman.lastSeenLocation}</p>
-                            <p><strong>Description:</strong> {woman.description}</p>
-                            <p><strong>Reported Date:</strong> {woman.reportedDate}</p>
-                            {/* Add other details as needed */}
-                        </div>
-                    ))}
-                </div>
+                <Carousel women={women}/>
             </header>
         </div>
     );
