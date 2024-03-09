@@ -31,22 +31,27 @@ function SearchCases({ onSelectCase }) {
 
 
     return (
-        <div>
-            <input
-                type="text"
-                value={searchTerm}
-                onChange={handleSearchChange}
-                placeholder="Search cases..."
-            />
-            <button onClick={handleSearch}>Search</button>
-            <ul>
-                {cases.map((caseItem) => (
-                    <li key={caseItem.id} onClick={() => onSelectCase(caseItem)}>
-                        {caseItem.name} - {caseItem.age} - {caseItem.lastSeenDate} - {caseItem.lastSeenLocation} - {caseItem.description} - {caseItem.reportedDate}
-                        <Link to={`/admin/update/${caseItem.id}`}>Edit</Link>
-                    </li>
-                ))}
-            </ul>
+        <div className="flex justify-center">
+            <div className="mt-14 w-6/12">
+                <p>
+                    Search cases in the database or create a new case below
+                </p>
+                <input className="p-3"
+                    type="text"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    placeholder="Search cases..."
+                />
+                <button className="bg-primary text-white p-2 rounded mt-5 mb-5" onClick={handleSearch}>Search</button>
+                <ul>
+                    {cases.map((caseItem) => (
+                        <li key={caseItem.id} onClick={() => onSelectCase(caseItem)}>
+                            {caseItem.name} - {caseItem.age} - {caseItem.lastSeenDate} - {caseItem.lastSeenLocation} - {caseItem.description} - {caseItem.reportedDate}
+                            <Link to={`/admin/update/${caseItem.id}`}>Edit</Link>
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
     );
 }

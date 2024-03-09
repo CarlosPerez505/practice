@@ -12,11 +12,13 @@ import './Carousel.css'
 function Carousel({women}) {
     const settings = {
         dots: true,
-        infinite: false,
-        speed: 500,
-        slidesToShow: 4,
-        slidesToScroll: 4,
-        initialSlide: 0,
+        infinite: true,
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        autoplay: true,
+        speed: 3000,
+        autoplaySpeed: 3000,
+        cssEase: "linear",
         responsive: [
             {
                 breakpoint: 1024,

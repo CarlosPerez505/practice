@@ -18,6 +18,11 @@ function HomePage() {
 
     return (
         <div className="Homepage">
+            <div className="flex justify-center mt-14">
+                <p className="p-5">
+                    This is a map displaying all the last seen locations of missing indigenous women in New Mexico
+                </p>
+            </div>
            <Map/>
             <header className="App-header">
                 <h1>Missing Women</h1>

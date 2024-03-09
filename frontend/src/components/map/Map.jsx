@@ -100,9 +100,9 @@ const Map = () => {
 
 
     return (
-        <div>
-            <button onClick={toggleHeatmap}>Toggle Heatmap</button>
-            <div ref={mapContainer} style={{ width: '50vw', height: '50vh' }} />
+        <div className="mt-5 mb-5">
+            <button className="bg-primary" onClick={toggleHeatmap}>Toggle Heatmap</button>
+            <div ref={mapContainer} style={{ width: '100vw', height: '50vh' }} />
         </div>
     );
 };

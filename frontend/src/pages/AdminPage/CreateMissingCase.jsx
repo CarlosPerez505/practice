@@ -141,80 +141,84 @@ function CreateMissingCase() {
 
 
     return (
-        <div className="mc-form-container">
+        <div>
             <SearchCases onSelectCase={handleSelectCase} />
-            <h1>Create Missing Case</h1>
-            {showSuccessMessage && <div className="success-message">Case updated successfully!</div>}
-            {showErrorMessage && <div className="error-message">Error creating missing case. Please try again.</div>}
-            <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="name">Name</label>
-                    <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        placeholder="Name"
-                        required
-                    />
-                    {formErrors.name && <div className="error-message">{formErrors.name}</div>}
-                </div>
-                <div className="form-group">
-                    <label htmlFor="age">Age</label>
-                    <input
-                        type="number"
-                        name="age"
-                        value={formData.age || ''}
-                        onChange={handleChange}
-                        placeholder="Age"
-                    />
-                    {formErrors.age && <div className="error-message">{formErrors.age}</div>}
-                </div>
-                <div className="form-group">
-                    <label htmlFor="date">Last Seen Date</label>
-                    <input
-                        type="date"
-                        name="lastSeenDate"
-                        value={formData.lastSeenDate}
-                        onChange={handleChange}
-                        placeholder="Last Seen Date"
-                    />
-                    {formErrors.lastSeenDate && <div className="error-message">{formErrors.lastSeenDate}</div>}
-                </div>
-                <div className="form-group">
-                    <label htmlFor="lastSeenLocation">Last seen location</label>
-                    <input
-                        type="text"
-                        name="lastSeenLocation"
-                        value={formData.lastSeenLocation || ''}
-                        onChange={handleChange}
-                        placeholder="Last Seen Location"
-                    />
-                    {formErrors.lastSeenLocation && <div className="error-message">{formErrors.lastSeenLocation}</div>}
-                </div>
-                <div className="form-group">
-                    <label htmlFor="description">Description</label>
-                    <textarea
-                        name="description"
-                        value={formData.description}
-                        onChange={handleChange}
-                        placeholder="Description"
-                    />
-                    {formErrors.description && <div className="error-message">{formErrors.description}</div>}
-                </div>
-                <div className="form-group">
-                    <label htmlFor="reportedDate">Reported Date</label>
-                    <input
-                        type="date"
-                        name="reportedDate"
-                        value={formData.reportedDate}
-                        onChange={handleChange}
-                        placeholder="Reported Date"
-                    />
-                    {formErrors.reportedDate && <div className="error-message">{formErrors.reportedDate}</div>}
-                </div>
-                <button className="createButton" type="submit">Create</button>
-            </form>
+            <div>
+                <form className="bg-slate-800 p-10" onSubmit={handleSubmit}>
+                    <h1>Create Missing Case</h1>
+                    {showSuccessMessage && <div className="success-message">Case updated successfully!</div>}
+                    {showErrorMessage && <div className="error-message">Error creating missing case. Please try again.</div>}
+                    <div className="form-group">
+                        <label htmlFor="name">Name</label>
+                        <input
+                            type="text"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            placeholder="Name"
+                            required
+                        />
+                        {formErrors.name && <div className="error-message">{formErrors.name}</div>}
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="age">Age</label>
+                        <input
+                            type="number"
+                            name="age"
+                            value={formData.age || ''}
+                            onChange={handleChange}
+                            placeholder="Age"
+                        />
+                        {formErrors.age && <div className="error-message">{formErrors.age}</div>}
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="date">Last Seen Date</label>
+                        <input
+                            type="date"
+                            name="lastSeenDate"
+                            value={formData.lastSeenDate}
+                            onChange={handleChange}
+                            placeholder="Last Seen Date"
+                        />
+                        {formErrors.lastSeenDate && <div className="error-message">{formErrors.lastSeenDate}</div>}
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="lastSeenLocation">Last seen location</label>
+                        <input
+                            type="text"
+                            name="lastSeenLocation"
+                            value={formData.lastSeenLocation || ''}
+                            onChange={handleChange}
+                            placeholder="Last Seen Location"
+                        />
+                        {formErrors.lastSeenLocation && <div className="error-message">{formErrors.lastSeenLocation}</div>}
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="description">Description</label>
+                        <textarea
+                            name="description"
+                            value={formData.description}
+                            onChange={handleChange}
+                            placeholder="Description"
+                        />
+                        {formErrors.description && <div className="error-message">{formErrors.description}</div>}
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="reportedDate">Reported Date</label>
+                        <input
+                            type="date"
+                            name="reportedDate"
+                            value={formData.reportedDate}
+                            onChange={handleChange}
+                            placeholder="Reported Date"
+                        />
+                        {formErrors.reportedDate && <div className="error-message">{formErrors.reportedDate}</div>}
+                    </div>
+                    <button className="bg-primary text-white p-2 rounded mt-5" type="submit">Create</button>
+                </form>
+
+            </div>
+
 
         </div>
 
