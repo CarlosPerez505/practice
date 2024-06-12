@@ -23,7 +23,25 @@ db.connect((err) => {
 });
 
 const app = express();
-app.use(cors());
+//app.use(cors());
+
+
+
+// code for local network database access for development
+const allowedOrigins = ['http://10.0.0.163:5173'];
+app.use(cors({
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    }
+}));
+
+
+
+
 app.use(express.json()); // Middleware to parse JSON request bodies
 app.use(morgan('dev'));
 
@@ -200,6 +218,6 @@ app.all('*', (req, res) => {
 
 // Start the server on the specified port
 const PORT = 5000;
-app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0',() => {
+    console.log(`Server running at http://0.0.0.0:${PORT}`);
 });

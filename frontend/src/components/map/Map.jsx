@@ -16,7 +16,7 @@ const Map = () => {
 
         const mapInstance = new mapboxgl.Map({
             container: mapContainer.current,
-            style: 'mapbox://styles/mapbox/streets-v11', // or any other style
+            style: 'mapbox://styles/mapbox/satellite-streets-v12', // or any other style
             center: [-108.2187, 36.7281], // Centered on Farmington, NM
             zoom: 9,
         });
@@ -101,7 +101,7 @@ const Map = () => {
 
     return (
         <div className="mt-5 mb-5">
-            <button className="bg-primary" onClick={toggleHeatmap}>Toggle Heatmap</button>
+            <button className="bg-primary p-2" onClick={toggleHeatmap}>Toggle Heatmap</button>
             <div ref={mapContainer} style={{ width: '100vw', height: '50vh' }} />
         </div>
     );

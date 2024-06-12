@@ -10,20 +10,27 @@ function HomePage() {
     const [women, setWomen] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:5000/api/missingCases')
+        fetch('http://10.0.0.163:5000/api/missingCases')
             .then(response => response.json())
-            .then(data => setWomen(data))
+            .then(data => {
+                console.log('Fetched data:', data); // Add this line
+                setWomen(data);
+            })
             .catch(error => console.error('Error fetching data:', error));
     }, []);
+
+
+
 
 
     return (
         <div className="Homepage">
             <Hero/>
+            <Carousel women={women}/>
            <Map/>
             <header className="App-header">
                 <h1>Missing Women</h1>
-                <Carousel women={women}/>
+
             </header>
         </div>
     );

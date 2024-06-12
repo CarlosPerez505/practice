@@ -1,4 +1,5 @@
 import React from 'react';
+import redHandIcon from '../assets/redHandIcon.jpg'
 
 const Hero = () => {
     return (
@@ -22,7 +23,7 @@ const Hero = () => {
                     <img
                         className="object-cover object-center rounded"
                         alt="hero"
-                        src="../assets/react.svg" // Replace with your image path
+                        src={redHandIcon} // Replace with your image path
                     />
                 </div>
             </div>
