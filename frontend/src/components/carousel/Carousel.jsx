@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import './Carousel.css'
 
-const Carousel = ({ women }) => {
+/*const Carousel = ({ women }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     let startX = 0;
 
@@ -83,18 +87,17 @@ const Carousel = ({ women }) => {
                 className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-gray-800 text-white p-2"
             >
                 ›
-                yo help
 
             </button>
         </div>
     );
 };
 
-export default Carousel;
+export default Carousel;*/
 
 
 
-/* import Slider from "react-slick";
+
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import './Carousel.css'
@@ -169,4 +172,4 @@ function Carousel({women}) {
         </div>
     );
 }
-export default Carousel; */
+export default Carousel;

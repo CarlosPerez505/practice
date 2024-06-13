@@ -2,6 +2,11 @@ import express from 'express';
 import mysql from 'mysql2';
 import cors from 'cors';
 import morgan from 'morgan';
+import path from 'path'; // Import the path module
+import { fileURLToPath } from 'url';
+import scraper from './scraper.js'; // Import your scraper module
+
+
 
 
 // Initialize MySQL connection
