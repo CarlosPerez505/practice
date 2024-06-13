@@ -69,11 +69,19 @@ function HomePage() {
     const [profiles, setProfiles] = useState([]);
     const [results, setResults] = useState([]);
 
-    const fetchData = async () => {
-        const response = await fetch('/scrape');
-        const data = await response.json();
-        setResults(data);
-    };
+    async function fetchData(limit = 5) {
+        try {
+            const response = await fetch(`http://10.0.0.163:5000/api/scrape?limit=${limit}`);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json(); // Parse the JSON data
+            console.log('Fetched data:', data);
+        } catch (error) {
+            console.error('Fetch error:', error);
+        }
+    }
+
 
     useEffect(() => {
         fetch('http://10.0.0.163:5000/api/missingCases')
