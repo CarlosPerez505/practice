@@ -98,6 +98,61 @@ const UpdateForm = () => {
                             <Field type="date" name="reportedDate" />
                             <ErrorMessage name="reportedDate" component="div" />
                         </div>
+                        <div className="form-group">
+                            <label htmlFor="eyeColor">Eye Color</label>
+                            <Field type="text" name="eyeColor" />
+                            <ErrorMessage name="eyeColor" component="div" />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="sex">sex</label>
+                            <Field type="text" name="sex" />
+                            <ErrorMessage name="sex" component="div" />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="hairColor">Hair Color</label>
+                            <Field type="text" name="hairColor" />
+                            <ErrorMessage name="hairColor" component="div" />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="height">Height</label>
+                            <Field type="text" name="height" />
+                            <ErrorMessage name="height" component="div" />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="tattoos">Tattoos</label>
+                            <Field type="text" name="tattoos" />
+                            <ErrorMessage name="tattoos" component="div" />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="identifyingMarks">Identifying Marks </label>
+                            <Field type="text" name="identifyingMarks" />
+                            <ErrorMessage name="identifyingMarks" component="div" />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="lastLatitude">Last Latitude</label>
+                            <Field type="text" name="lastLatitude" />
+                            <ErrorMessage name="lastLatitude" component="div" />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="lastLongitutde">Last Longitude</label>
+                            <Field type="text" name="lastLongitutde" />
+                            <ErrorMessage name="lastLongitutde" component="div" />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="photo1">Photo</label>
+                            <Field type="text" name="photo1" />
+                            <ErrorMessage name="photo1" component="div" />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="tribe">Tribe</label>
+                            <Field type="text" name="tribe" />
+                            <ErrorMessage name="tribe" component="div" />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="weight">Weight</label>
+                            <Field type="text" name="weight" />
+                            <ErrorMessage name="weight" component="div" />
+                        </div>
                         {/* Repeat for other fields */}
                         <button type="submit" disabled={isSubmitting}>
                             Update
