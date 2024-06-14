@@ -13,7 +13,7 @@ function SearchCases({ onSelectCase }) {
 
     const handleSearch = () => {
         console.log("Searching for:", searchTerm);
-        fetch('http://localhost:5000/api/missingCases/search?term=' + encodeURIComponent(searchTerm))
+        fetch('http://10.0.0.163:5000/api/missingCases/search?term=' + encodeURIComponent(searchTerm))
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`Network response was not ok: ${response.status}`);
@@ -26,6 +26,14 @@ function SearchCases({ onSelectCase }) {
             })
             .catch(error => console.error('Error fetching data:', error));
     };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleSearch();
+        }
+    };
+
 
 
 
@@ -40,9 +48,11 @@ function SearchCases({ onSelectCase }) {
                     type="text"
                     value={searchTerm}
                     onChange={handleSearchChange}
+                       onKeyDown={handleKeyDown}
                     placeholder="Search cases..."
                 />
-                <button className="bg-primary text-white p-2 rounded mt-5 mb-5" onClick={handleSearch}>Search</button>
+                <button onClick={handleSearch}
+                        className="bg-primary text-white p-2 rounded mt-5 mb-5">Search</button>
                 <ul>
                     {cases.map((caseItem) => (
                         <li key={caseItem.id} onClick={() => onSelectCase(caseItem)}>
