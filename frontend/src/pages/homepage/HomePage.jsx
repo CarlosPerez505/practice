@@ -77,6 +77,7 @@ function HomePage() {
             }
             const data = await response.json(); // Parse the JSON data
             console.log('Fetched data:', data);
+            setResults(data); // Update the results state with the fetched dat
         } catch (error) {
             console.error('Fetch error:', error);
         }

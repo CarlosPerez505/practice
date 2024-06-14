@@ -240,7 +240,7 @@ const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: 'data',
-    database: 'missing_women_db',
+    database: 'missing_person_db',
     port: 3307
 });
 
