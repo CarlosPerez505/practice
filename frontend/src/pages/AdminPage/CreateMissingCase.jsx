@@ -337,7 +337,7 @@ function CreateMissingCase() {
                         <input
                             type="text"
                             name="lastLongitude"
-                            value={formData.lastLatitude}
+                            value={formData.lastLongitude}
                             onChange={handleChange}
                             placeholder="Last Longitude"
                         />

@@ -4,7 +4,7 @@ import {Link} from "react-router-dom";
 const ProfileCard = ({ profile }) => {
     return (
         <div className="max-w-sm rounded overflow-hidden shadow-lg">
-            <img className="w-full" src={profile.picture} alt={`${profile.name}'s picture`} />
+            <img className="w-full" src={profile.photo1} alt={`${profile.name}'s picture`} />
             <div className="px-6 py-4">
                 <div className="font-bold text-xl mb-2">{profile.name}</div>
                 <p className="text-gray-700 text-base">

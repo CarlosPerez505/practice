@@ -153,7 +153,7 @@ function Carousel({women}) {
                         <img
                             // src={placeholderImage} // Your local placeholder image
                             // Or use a remote placeholder image
-                            src={`https://via.placeholder.com/150x150?text=${woman.name}`}
+                            src={`https://cdn.pixabay.com/photo/2023/11/10/02/30/woman-8378634_1280.jpg?text=${woman.name}`}
                             alt={`Placeholder for ${woman.name}`}
                             className="slide-image"
                         />

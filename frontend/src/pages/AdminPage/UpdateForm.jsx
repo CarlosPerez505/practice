@@ -10,14 +10,25 @@ const UpdateForm = () => {
         lastSeenDate: '',
         lastSeenLocation: '',
         description: '',
-        reportedDate: ''
+        reportedDate: '',
+        eyeColor: '',
+        sex: '',
+        lastLatitude:'',
+        lastLongitude:'',
+        photo1:'',
+        tribe: '',
+        weight:'',
+        lastKnownAddress: '',
+        lastPlaceOfEmployment:'',
+        school:'',
+        dateOfBirth:'',
     });
     const { id } = useParams();
     const navigate = useNavigate();
 
     useEffect(() => {
         if (id) {
-            fetch(`http://localhost:5000/api/missingCases/${id}`)
+            fetch(`http://10.0.0.163:5000/api/missingCases/${id}`)
                 .then(response => response.json())
                 .then(data => {
                     const formattedData = {
@@ -39,13 +50,33 @@ const UpdateForm = () => {
     }
 
     const validationSchema = Yup.object().shape({
-        name: Yup.string().required('Name is required'),
-        age: Yup.number().required('Age is required').positive('Age must be positive'),
-        lastSeenDate: Yup.date(),
-        lastSeenLocation: Yup.string(),
-        description: Yup.string(),
-        reportedDate: Yup.date(),
+        name: Yup.string().nullable(),
+        age: Yup.number().positive('Age must be positive').nullable(),
+        lastSeenDate: Yup.date().nullable(),
+        lastSeenLocation: Yup.string().nullable(),
+        description: Yup.string().nullable(),
+        reportedDate: Yup.date().nullable(),
+        eyeColor: Yup.string().nullable(),
+        sex: Yup.string().nullable(),
+        firstName: Yup.string().nullable(),
+        hairColor: Yup.string().nullable(),
+        height: Yup.string().nullable(),
+        tattoos: Yup.string().nullable(),
+        hobbiesAndInterests: Yup.string().nullable(),
+        identifyingMarks: Yup.string().nullable(),
+        lastName: Yup.string().nullable(),
+        lastLatitude: Yup.number().nullable(),
+        lastLongitude: Yup.number().nullable(),
+        photo1: Yup.string().nullable(),
+        tribe: Yup.string().nullable(),
+        weight: Yup.number().positive('Weight must be positive').nullable(),
+        lastKnownAddress: Yup.string().nullable(),
+        lastPlaceOfEmployment: Yup.string().nullable(),
+        school: Yup.string().nullable(),
+        temp_dateOfBirth: Yup.date().nullable(),
+        dateOfBirth: Yup.date().nullable(),
     });
+
 
     return (
         <div>
@@ -55,16 +86,25 @@ const UpdateForm = () => {
                 initialValues={initialValues}
                 validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting }) => {
-                    fetch(`http://localhost:5000/api/missingCases/${id}`, {
+                    // Remove null or empty fields
+                    const filteredValues = Object.keys(values).reduce((acc, key) => {
+                        if (values[key] !== '' && values[key] !== null && values[key] !== undefined) {
+                            acc[key] = values[key];
+                        }
+                        return acc;
+                    }, {});
+
+                    fetch(`http://10.0.0.163:5000/api/missingCases/${id}`, {
                         method: 'PATCH',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(values),
+                        body: JSON.stringify(filteredValues),
                     })
                         .then(response => response.json())
                         .then(() => navigate('/'))
                         .catch(error => console.error('Error:', error))
                         .finally(() => setSubmitting(false));
                 }}
+
             >
                 {({ isSubmitting }) => (
                     <Form>
@@ -135,7 +175,7 @@ const UpdateForm = () => {
                         </div>
                         <div className="form-group">
                             <label htmlFor="lastLongitutde">Last Longitude</label>
-                            <Field type="text" name="lastLongitutde" />
+                            <Field type="text" name="lastLongitude" />
                             <ErrorMessage name="lastLongitutde" component="div" />
                         </div>
                         <div className="form-group">
@@ -152,6 +192,21 @@ const UpdateForm = () => {
                             <label htmlFor="weight">Weight</label>
                             <Field type="text" name="weight" />
                             <ErrorMessage name="weight" component="div" />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="lastPlaceOfEmployment">Last Place Of Employment</label>
+                            <Field type="text" name="lastPlaceOfEmployment" />
+                            <ErrorMessage name="lastPlaceOfEmployment" component="div" />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="school">School</label>
+                            <Field type="text" name="school" />
+                            <ErrorMessage name="school" component="div" />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="dateOfBirth">Date Of Birth </label>
+                            <Field type="text" name="dateOfBirth" />
+                            <ErrorMessage name="dateOfBirth" component="div" />
                         </div>
                         {/* Repeat for other fields */}
                         <button type="submit" disabled={isSubmitting}>

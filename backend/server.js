@@ -358,18 +358,17 @@ app.get('/api/missingCases/:id', (req, res) => {
 
 app.patch('/api/missingCases/:id', (req, res) => {
     const { id } = req.params;
-    const { name, age, lastSeenDate, lastSeenLocation, description, reportedDate } = req.body;
-    const query = `
-        UPDATE missingCases SET
-        name = COALESCE(?, name),
-        age = COALESCE(?, age),
-        lastSeenDate = COALESCE(?, lastSeenDate),
-        lastSeenLocation = COALESCE(?, lastSeenLocation),
-        description = COALESCE(?, description),
-        reportedDate = COALESCE(?, reportedDate)
-        WHERE id = ?`;
+    const updateFields = req.body;
 
-    db.query(query, [name, age, lastSeenDate, lastSeenLocation, description, reportedDate, id], (err, result) => {
+    if (Object.keys(updateFields).length === 0) {
+        return res.status(400).json({ error: 'No fields provided for update' });
+    }
+
+    const setClause = Object.keys(updateFields).map(key => `${key} = ?`).join(', ');
+    const queryParams = [...Object.values(updateFields), id];
+    const query = `UPDATE missingCases SET ${setClause} WHERE id = ?`;
+
+    db.query(query, queryParams, (err, result) => {
         if (err) {
             console.error('Error updating database:', err);
             return res.status(500).json({ error: 'Failed to update the database' });
@@ -380,6 +379,7 @@ app.patch('/api/missingCases/:id', (req, res) => {
         res.status(200).json({ message: 'Entry updated successfully' });
     });
 });
+
 
 app.delete('/api/missingCases/:id', (req, res) => {
     const { id } = req.params;
