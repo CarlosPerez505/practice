@@ -57,6 +57,7 @@ function SearchCases({ onSelectCase }) {
                     {cases.map((caseItem) => (
                         <li key={caseItem.id} onClick={() => onSelectCase(caseItem)}>
                             {caseItem.name} - {caseItem.age} - {caseItem.lastSeenDate} - {caseItem.lastSeenLocation} - {caseItem.description} - {caseItem.reportedDate}
+                            {caseItem.lastPlaceOfEmployment}
                             <Link to={`/admin/update/${caseItem.id}`}>Edit</Link>
                         </li>
                     ))}

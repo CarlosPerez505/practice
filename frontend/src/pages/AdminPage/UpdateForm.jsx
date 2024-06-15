@@ -79,7 +79,7 @@ const UpdateForm = () => {
 
 
     return (
-        <div>
+        <div >
             <h1>Update Missing Case</h1>
             <Formik
                 enableReinitialize // Important: This allows Formik to reinitialize with new initial values
@@ -107,10 +107,10 @@ const UpdateForm = () => {
 
             >
                 {({ isSubmitting }) => (
-                    <Form>
+                    <Form className="bg-slate-800 p-10 space-y-6">
                         <div className="form-group">
                             <label htmlFor="name">Name</label>
-                            <Field type="text" name="name" />
+                            <Field type="text" name="name" className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
                             <ErrorMessage name="name" component="div" />
                         </div>
                         <div className="form-group">

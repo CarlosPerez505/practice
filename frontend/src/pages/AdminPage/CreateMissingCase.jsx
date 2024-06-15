@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './CreateMissingCase.css';
 import SearchCases from "../../components/SearchCases/SearchCases.jsx";
 
@@ -14,6 +14,9 @@ function CreateMissingCase() {
         reportedDate: '',
         eyeColor: '',
         sex: '',
+        height:'',
+        tattoos:'',
+        IdentifyingMarks:'',
         lastLatitude:'',
         lastLongitude:'',
         photo1:'',
@@ -28,37 +31,21 @@ function CreateMissingCase() {
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
     const [showErrorMessage, setShowErrorMessage] = useState(false);
     const [formErrors, setFormErrors] = useState({});
+    const [cases, setCases] = useState([]);
 
 
-    const handleSelectCase = (caseItem) => {
-        // Update formData with the selected case details
-        setFormData({
-            id: caseItem.id || '',
-            name: caseItem.name || '',
-            age: caseItem.age || '', // Add age
-            lastSeenDate: caseItem.lastSeenDate || '', // Ensure this matches your data structure
-            lastSeenLocation: caseItem.lastSeenLocation || '', // Add last_seen_location
-            description: caseItem.description || '',
-            reportedDate: caseItem.reportedDate || '',
-            eyeColor: caseItem.eyeColor || '', // Add reported_date
-            sex: caseItem.sex || '',
-            hairColor: caseItem.hairColor || '',
-            height: caseItem.height || '',
-            tattoos: caseItem.tattoos || '',
-            identifyingMarks: caseItem.identifyingMarks || '',
-            lastLatitude: caseItem.lastLatitude || '',
-            lastLongitude: caseItem.lastLongitude || '',
-            photo1: caseItem.photo1 || '',
-            tribe: caseItem.tribe || '',
-            weight: caseItem.weight || '',
-            lastKnownAddress: caseItem.lastKnownAddress || '',
-            lastPlaceOfEmployment: caseItem.lastPlaceOfEmployment || '',
-            dateOfBirth: caseItem.dateOfBirth || '',
-        });
-        // Reset the success and error messages when a new case is selected
-        setShowSuccessMessage(false);
-        setShowErrorMessage(false);
+    useEffect(() => {
+        fetchCases();
+    }, []);
+
+
+    const fetchCases = () => {
+        fetch('http://10.0.0.163:5000/api/missingCases')
+            .then(response => response.json())
+            .then(data => setCases(data))
+            .catch(error => console.error('Error fetching cases:', error));
     };
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -74,19 +61,16 @@ function CreateMissingCase() {
         }
 
         const requestOptions = {
-            method: formData.id ? 'PATCH' : 'POST', // Use PATCH if id exists, otherwise use POST
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(formData),
         };
 
-        const endpoint = formData.id
-            ? `http://10.0.0.163:5000/api/missingCases/${formData.id}` // PATCH endpoint
-            : 'http://10.0.0.163:5000/api/missingCases'; // POST endpoint
 
-        // Fetch request to either create or update the case
-        fetch(endpoint, requestOptions)
+        // Fetch request to create
+        fetch('http://10.0.0.163:5000/api/missingCases', requestOptions)
             .then(response => response.json())
             .then(data => {
                 console.log('Success:', data);
@@ -103,6 +87,10 @@ function CreateMissingCase() {
                     reportedDate: '',
                     eyeColor: '',
                     sex: '',
+                    hairColor:'',
+                    height:'',
+                    tattoos:'',
+                    IdentifyingMarks:'',
                     lastLatitude:'',
                     lastLongitude:'',
                     photo1:'',
@@ -183,11 +171,11 @@ function CreateMissingCase() {
 
     return (
         <div>
-            <SearchCases onSelectCase={handleSelectCase} />
+
             <div>
                 <form className="bg-slate-800 p-10" onSubmit={handleSubmit}>
                     <h1>Create Missing Case</h1>
-                    {showSuccessMessage && <div className="success-message">Case updated successfully!</div>}
+                    {showSuccessMessage && <div className="success-message">Case created successfully!</div>}
                     {showErrorMessage && <div className="error-message">Error creating missing case. Please try again.</div>}
                     <div className="form-group">
                         <label htmlFor="name">Name</label>
@@ -432,3 +420,4 @@ function CreateMissingCase() {
 }
 
 export default CreateMissingCase;
+
