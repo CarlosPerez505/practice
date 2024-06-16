@@ -1,95 +1,59 @@
-//import puppeteer from "puppeteer";
+import puppeteer from "puppeteer";
 
-/*async function scrape(limit= 5) {
+async function scrape() {
     const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
 
-    // Navigate to Google and perform a search
-    await page.goto('https://www.google.com');
-    await page.type('input[name=q]', 'missing indigenous women');
-    await page.keyboard.press('Enter');
-    await page.waitForSelector('div#search'); // Wait for search results to load
-
-    // Extract search results
-    const data = await page.evaluate(() => {
-        const articles = [];
-        const items = document.querySelectorAll('div#search .g');
-        items.forEach((item,index) => {
-            if (index < limit) {
-                const title = item.querySelector('h3')?.innerText;
-                const link = item.querySelector('a')?.href;
-
-                if (title && link) {
-                    articles.push({ title, link });
-                }
-
-            }
-
-        });
-        return articles;
-    }, limit);
-
-    console.log(data);
-
-    await browser.close();
-    return data;
-}
-
-export default  scrape ;*/
-
-
-
-import puppeteer from "puppeteer";
-
-async function scrape(limit = 5) {
-    const browser = await puppeteer.launch({ headless: false });
-    const page = await browser.newPage();
-
     try {
-        // Navigate to Google and wait until the network is idle
-        await page.goto('https://www.google.com', { waitUntil: 'networkidle2' });
-        console.log('Navigated to Google');
+        // Navigate to the main website
+        await page.goto('http://missingpersons.dps.state.nm.us/mpweb/', { waitUntil: 'networkidle2' });
+        console.log('Navigated to the main website');
 
-        // Capture a screenshot after navigation
-        await page.screenshot({ path: 'step1.png' });
+        // Wait for the iframe to load
+        await page.waitForSelector('frame[name="links"]');
+        console.log('Target iframe found');
 
-        // Wait for the search textarea to appear and be visible
-        await page.waitForSelector('textarea[name="q"]', { visible: true, timeout: 10000 });
-        console.log('Search input found');
+        // Switch to the iframe context
+        const targetFrame = await page.frames().find(frame => frame.name() === 'links');
+        if (!targetFrame) {
+            throw new Error('Target iframe not found');
+        }
 
-        // Capture a screenshot after the search input is found
-        await page.screenshot({ path: 'step2.png' });
+        // Wait for the "City" link to be present and visible
+        await targetFrame.waitForSelector('a[href="mpcity.html"]', { visible: true, timeout: 30000 });
+        console.log('City link found');
 
-        // Type the search query into the textarea field
-        await page.type('textarea[name="q"]', 'missing indigenous women');
-        await page.keyboard.press('Enter');
-        console.log('Search initiated');
+        // Click the "City" link
+        await targetFrame.click('a[href="mpcity.html"]');
+        console.log('Clicked on the City link');
 
-        // Capture a screenshot after initiating the search
-        await page.screenshot({ path: 'step3.png' });
+        // Wait for the city search form to appear
+        await targetFrame.waitForSelector('form[name="form3"]', { visible: true });
+        console.log('City search form found');
 
-        // Wait for search results to load
-        await page.waitForSelector('div#search', { timeout: 10000 });
-        console.log('Search results loaded');
+        // Type "FARMINGTON" into the city input field
+        await targetFrame.type('input[name="city_txt"]', 'FARMINGTON');
+        console.log('Entered FARMINGTON in the city input field');
 
-        // Capture a screenshot after search results are loaded
-        await page.screenshot({ path: 'step4.png' });
+        // Submit the form
+        await Promise.all([
+            targetFrame.waitForNavigation({ waitUntil: 'networkidle2' }),
+            targetFrame.click('input[type="submit"]')
+        ]);
+        console.log('Form submitted');
 
-        // Extract search results
-        const data = await page.evaluate((limit) => {
-            const articles = [];
-            const items = document.querySelectorAll('div#search .g');
-            items.forEach((item, index) => {
-                if (index < limit) {
-                    const title = item.querySelector('h3')?.innerText;
-                    const link = item.querySelector('a')?.href;
-                    if (title && link) {
-                        articles.push({ title, link });
-                    }
-                }
+        // Wait for the results to load and display
+        await targetFrame.waitForSelector('table#results', { timeout: 10000 });
+        console.log('Results table found');
+
+        // Extract the data
+        const data = await targetFrame.evaluate(() => {
+            const rows = Array.from(document.querySelectorAll('table#results tr'));
+            return rows.map(row => {
+                const cells = Array.from(row.querySelectorAll('td'));
+                return cells.map(cell => cell.textContent.trim());
             });
-            return articles;
-        }, limit);
+        });
 
         console.log('Scraped data:', data);
         return data;
@@ -101,5 +65,4 @@ async function scrape(limit = 5) {
     }
 }
 
-export default scrape;
-
+scrape();

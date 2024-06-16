@@ -8,7 +8,7 @@ const ProfileCard = ({ profile }) => {
                 src={profile.photo1}
                 alt={`${profile.name}'s picture`}
                 loading="lazy"
-                className="w-full h-48 object-cover"
+                className="w-full h-48 object-contain"
             />
             <div className="px-6 py-4">
                 <div className="font-bold text-xl mb-2">{profile.name}</div>
