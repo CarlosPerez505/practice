@@ -1,8 +1,8 @@
-/** @type {import('tailwindcss').Config} */
-export default {
+// tailwind.config.js
+module.exports = {
   content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+    './index.html',
+    './src/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {
@@ -12,9 +12,8 @@ export default {
         accent: '#F6E05E',
         neutral: '#F7FAFC',
         highlight: '#3182CE',
-      }
+      },
     },
   },
   plugins: [],
-}
-
+};
