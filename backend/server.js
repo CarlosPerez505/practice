@@ -4,7 +4,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import {scraper} from './Scraper.js';
+
 
 // Initialize MySQL connection
 const db = mysql.createConnection({
@@ -85,23 +85,6 @@ app.get('/api/scrape', async (req, res) => {
 });*/
 
 // Manual trigger endpoint for the scraper
-app.get('/api/manual-scrape', async (req, res) => {
-    const limit = parseInt(req.query.limit, 10) || 5;
-
-    console.log(`Manual scrape endpoint called with limit: ${limit}`);
-    console.log('Manual scraper is starting...');
-
-    try {
-        const data = await scraper.scrape(limit);
-        console.log('Scraped data:', data);
-        res.json(data);
-        console.log('Manual scraper has finished running.');
-    } catch (error) {
-        console.error('Manual scraping error:', error);
-        res.status(500).send(error.message);
-        console.log('Manual scraper encountered an error.');
-    }
-});
 
 // API endpoints for managing missing cases
 app.get('/api/missingCases/search', (req, res) => {

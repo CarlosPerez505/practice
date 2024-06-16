@@ -5,7 +5,7 @@ import mysql from 'mysql2/promise';
     console.log("Scraper is running...");
 
     try {
-        const results = await scrape('Farmington, NM');
+        const results = await scrape(20); // Limit to 5 records for example
         console.log("Scrape results:", results);
 
         if (!Array.isArray(results)) {
@@ -69,12 +69,12 @@ function formatDate(dateString) {
 }
 
 async function insertIntoDatabase(data) {
-    const mysql = require('mysql2/promise');
     const connection = await mysql.createConnection({
         host: 'localhost',
         user: 'root',
-        password: 'password',
-        database: 'missingPersonsDB'
+        password: 'data',
+        database: 'missing_person_db',
+        port: 3307
     });
 
     const query = `INSERT INTO missingCases 

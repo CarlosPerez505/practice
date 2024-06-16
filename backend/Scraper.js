@@ -1,4 +1,4 @@
-import puppeteer from 'puppeteer';
+import puppeteer from "puppeteer";
 import mysql from 'mysql2/promise';
 
 // Function to convert date format from MM/DD/YYYY to YYYY-MM-DD
@@ -59,7 +59,7 @@ export async function scrape(limit) {
                 const nameDetails = document.querySelector('div#MPImgTxt')?.innerText.trim() || '';
                 const [nameDetailsDate, name] = nameDetails.split(' - ');
 
-                const detailData = {
+                return {
                     name: name || '',
                     missingDate: getTextByLabel('Date Missing:'),
                     missingFrom: getTextByLabel('Missing from:'),
@@ -74,58 +74,10 @@ export async function scrape(limit) {
                     hairColor: getTextByLabel('Hair Color:'),
                     race: getTextByLabel('Race:')
                 };
-
-                console.log('Detail data extracted:', detailData);
-                return detailData;
             });
 
             console.log('Scraped detail:', detail);
-
-            const missingCase = {
-                name: detail.name,
-                age: detail.ageNow || detail.ageThen,
-                lastSeenDate: formatDate(detail.missingDate),
-                lastSeenLocation: detail.missingFrom,
-                description: detail.description,
-                reportedDate: null,
-                eyeColor: detail.eyeColor,
-                sex: detail.sex,
-                firstName: detail.name.split(' ')[0] || '',
-                hairColor: detail.hairColor,
-                height: detail.height,
-                tattoos: null,
-                hobbiesAndInterests: null,
-                identifyingMarks: null,
-                lastName: detail.name.split(' ').slice(1).join(' ') || '',
-                lastLatitude: null,
-                lastLongitude: null,
-                photo1: null,
-                tribe: detail.race,
-                weight: isNaN(detail.weight) ? null : detail.weight,
-                lastKnownAddress: null,
-                lastPlaceOfEmployment: null,
-                school: null,
-                temp_dateOfBirth: formatDate(detail.dob),
-                dateOfBirth: formatDate(detail.dob)
-            };
-
-            console.log('Mapped data:', missingCase);
-
-            const columns = Object.keys(missingCase);
-            const values = Object.values(missingCase);
-
-            if (columns.length !== values.length) {
-                console.log('Column count and value count do not match:', values);
-                continue;
-            }
-
-            const placeholders = columns.map(() => '?').join(', ');
-            const sql = `INSERT INTO missingCases (${columns.join(', ')}) VALUES (${placeholders})`;
-
-            await connection.execute(sql, values);
-            console.log('Inserted data into database for', missingCase.name);
-
-            results.push(missingCase);
+            results.push(detail);
         }
 
     } catch (error) {
