@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import DeleteButton from '../../components/DeleteButton.jsx';
 
 const UpdateForm = () => {
     const [initialValues, setInitialValues] = useState({
@@ -13,15 +14,15 @@ const UpdateForm = () => {
         reportedDate: '',
         eyeColor: '',
         sex: '',
-        lastLatitude:'',
-        lastLongitude:'',
-        photo1:'',
+        lastLatitude: '',
+        lastLongitude: '',
+        photo1: '',
         tribe: '',
-        weight:'',
+        weight: '',
         lastKnownAddress: '',
-        lastPlaceOfEmployment:'',
-        school:'',
-        dateOfBirth:'',
+        lastPlaceOfEmployment: '',
+        school: '',
+        dateOfBirth: '',
     });
     const { id } = useParams();
     const navigate = useNavigate();
@@ -42,7 +43,6 @@ const UpdateForm = () => {
         }
     }, [id]);
 
-    // Helper function to format date for input[type=date]
     function formatDate(dateString) {
         if (!dateString) return '';
         const date = new Date(dateString);
@@ -76,11 +76,9 @@ const UpdateForm = () => {
         temp_dateOfBirth: Yup.date().nullable(),
         dateOfBirth: Yup.date().nullable(),
     });
-
-
     return (
-        <div >
-            <h1>Update Missing Case</h1>
+        <div className="max-w-4xl mx-auto mt-10 p-6 bg-slate-800 rounded-lg shadow-md">
+            <h1 className="text-2xl font-bold mb-6">Update Missing Case</h1>
             <Formik
                 enableReinitialize // Important: This allows Formik to reinitialize with new initial values
                 initialValues={initialValues}
@@ -104,115 +102,120 @@ const UpdateForm = () => {
                         .catch(error => console.error('Error:', error))
                         .finally(() => setSubmitting(false));
                 }}
-
             >
                 {({ isSubmitting }) => (
-                    <Form className="bg-slate-800 p-10 space-y-6">
+                    <Form className="space-y-6">
                         <div className="form-group">
-                            <label htmlFor="name">Name</label>
-                            <Field type="text" name="name" className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
-                            <ErrorMessage name="name" component="div" />
+                            <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
+                            <Field type="text" name="name" className="p-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
+                            <ErrorMessage name="name" component="div" className="text-red-500 text-sm mt-1"/>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="age">Age</label>
-                            <Field type="number" name="age" />
-                            <ErrorMessage name="age" component="div" />
+                            <label htmlFor="age" className="block text-sm font-medium text-gray-700">Age</label>
+                            <Field type="number" name="age" className="p-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
+                            <ErrorMessage name="age" component="div" className="text-red-500 text-sm mt-1"/>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="lastSeenDate">Last Seen Date</label>
-                            <Field type="date" name="lastSeenDate" />
-                            <ErrorMessage name="lastSeenDate" component="div" />
+                            <label htmlFor="lastSeenDate" className="block text-sm font-medium text-gray-700">Last Seen Date</label>
+                            <Field type="date" name="lastSeenDate" className="p-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
+                            <ErrorMessage name="lastSeenDate" component="div" className="text-red-500 text-sm mt-1"/>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="lastSeenLocation">Last Seen Location</label>
-                            <Field type="text" name="lastSeenLocation" />
-                            <ErrorMessage name="lastSeenLocation" component="div" />
+                            <label htmlFor="lastSeenLocation" className="block text-sm font-medium text-gray-700">Last Seen Location</label>
+                            <Field type="text" name="lastSeenLocation" className="p-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
+                            <ErrorMessage name="lastSeenLocation" component="div" className="text-red-500 text-sm mt-1"/>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="description">Description</label>
-                            <Field type="text" name="description" />
-                            <ErrorMessage name="description" component="div" />
+                            <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
+                            <Field type="text" name="description" className="p-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
+                            <ErrorMessage name="description" component="div" className="text-red-500 text-sm mt-1"/>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="reportedDate">Reported Date</label>
-                            <Field type="date" name="reportedDate" />
-                            <ErrorMessage name="reportedDate" component="div" />
+                            <label htmlFor="reportedDate" className="block text-sm font-medium text-gray-700">Reported Date</label>
+                            <Field type="date" name="reportedDate" className="p-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
+                            <ErrorMessage name="reportedDate" component="div" className="text-red-500 text-sm mt-1"/>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="eyeColor">Eye Color</label>
-                            <Field type="text" name="eyeColor" />
-                            <ErrorMessage name="eyeColor" component="div" />
+                            <label htmlFor="eyeColor" className="block text-sm font-medium text-gray-700">Eye Color</label>
+                            <Field type="text" name="eyeColor" className="p-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
+                            <ErrorMessage name="eyeColor" component="div" className="text-red-500 text-sm mt-1"/>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="sex">sex</label>
-                            <Field type="text" name="sex" />
-                            <ErrorMessage name="sex" component="div" />
+                            <label htmlFor="sex" className="block text-sm font-medium text-gray-700">Sex</label>
+                            <Field type="text" name="sex" className="p-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
+                            <ErrorMessage name="sex" component="div" className="text-red-500 text-sm mt-1"/>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="hairColor">Hair Color</label>
-                            <Field type="text" name="hairColor" />
-                            <ErrorMessage name="hairColor" component="div" />
+                            <label htmlFor="hairColor" className="block text-sm font-medium text-gray-700">Hair Color</label>
+                            <Field type="text" name="hairColor" className="p-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
+                            <ErrorMessage name="hairColor" component="div" className="text-red-500 text-sm mt-1"/>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="height">Height</label>
-                            <Field type="text" name="height" />
-                            <ErrorMessage name="height" component="div" />
+                            <label htmlFor="height" className="block text-sm font-medium text-gray-700">Height</label>
+                            <Field type="text" name="height" className="p-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
+                            <ErrorMessage name="height" component="div" className="text-red-500 text-sm mt-1"/>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="tattoos">Tattoos</label>
-                            <Field type="text" name="tattoos" />
-                            <ErrorMessage name="tattoos" component="div" />
+                            <label htmlFor="tattoos" className="block text-sm font-medium text-gray-700">Tattoos</label>
+                            <Field type="text" name="tattoos" className="p-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
+                            <ErrorMessage name="tattoos" component="div" className="text-red-500 text-sm mt-1"/>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="identifyingMarks">Identifying Marks </label>
-                            <Field type="text" name="identifyingMarks" />
-                            <ErrorMessage name="identifyingMarks" component="div" />
+                            <label htmlFor="identifyingMarks" className="block text-sm font-medium text-gray-700">Identifying Marks</label>
+                            <Field type="text" name="identifyingMarks" className="p-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
+                            <ErrorMessage name="identifyingMarks" component="div" className="text-red-500 text-sm mt-1"/>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="lastLatitude">Last Latitude</label>
-                            <Field type="text" name="lastLatitude" />
-                            <ErrorMessage name="lastLatitude" component="div" />
+                            <label htmlFor="lastLatitude" className="block text-sm font-medium text-gray-700">Last Latitude</label>
+                            <Field type="text" name="lastLatitude" className="p-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
+                            <ErrorMessage name="lastLatitude" component="div" className="text-red-500 text-sm mt-1"/>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="lastLongitutde">Last Longitude</label>
-                            <Field type="text" name="lastLongitude" />
-                            <ErrorMessage name="lastLongitutde" component="div" />
+                            <label htmlFor="lastLongitude" className="block text-sm font-medium text-gray-700">Last Longitude</label>
+                            <Field type="text" name="lastLongitude" className="p-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
+                            <ErrorMessage name="lastLongitude" component="div" className="text-red-500 text-sm mt-1"/>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="photo1">Photo</label>
-                            <Field type="text" name="photo1" />
-                            <ErrorMessage name="photo1" component="div" />
+                            <label htmlFor="photo1" className="block text-sm font-medium text-gray-700">Photo</label>
+                            <Field type="text" name="photo1" className="p-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
+                            <ErrorMessage name="photo1" component="div" className="text-red-500 text-sm mt-1"/>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="tribe">Tribe</label>
-                            <Field type="text" name="tribe" />
-                            <ErrorMessage name="tribe" component="div" />
+                            <label htmlFor="tribe" className="block text-sm font-medium text-gray-700">Tribe</label>
+                            <Field type="text" name="tribe" className="p-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
+                            <ErrorMessage name="tribe" component="div" className="text-red-500 text-sm mt-1"/>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="weight">Weight</label>
-                            <Field type="text" name="weight" />
-                            <ErrorMessage name="weight" component="div" />
+                            <label htmlFor="weight" className="block text-sm font-medium text-gray-700">Weight</label>
+                            <Field type="text" name="weight" className="p-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
+                            <ErrorMessage name="weight" component="div" className="text-red-500 text-sm mt-1"/>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="lastPlaceOfEmployment">Last Place Of Employment</label>
-                            <Field type="text" name="lastPlaceOfEmployment" />
-                            <ErrorMessage name="lastPlaceOfEmployment" component="div" />
+                            <label htmlFor="lastPlaceOfEmployment" className="block text-sm font-medium text-gray-700">Last Place Of Employment</label>
+                            <Field type="text" name="lastPlaceOfEmployment" className="p-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
+                            <ErrorMessage name="lastPlaceOfEmployment" component="div" className="text-red-500 text-sm mt-1"/>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="school">School</label>
-                            <Field type="text" name="school" />
-                            <ErrorMessage name="school" component="div" />
+                            <label htmlFor="school" className="block text-sm font-medium text-gray-700">School</label>
+                            <Field type="text" name="school" className="p-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
+                            <ErrorMessage name="school" component="div" className="text-red-500 text-sm mt-1"/>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="dateOfBirth">Date Of Birth </label>
-                            <Field type="text" name="dateOfBirth" />
-                            <ErrorMessage name="dateOfBirth" component="div" />
+                            <label htmlFor="dateOfBirth" className="block text-sm font-medium text-gray-700">Date Of Birth</label>
+                            <Field type="date" name="dateOfBirth" className="p-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
+                            <ErrorMessage name="dateOfBirth" component="div" className="text-red-500 text-sm mt-1"/>
                         </div>
-                        {/* Repeat for other fields */}
-                        <button type="submit" disabled={isSubmitting}>
-                            Update
-                        </button>
-
+                        <div className="form-group">
+                            <label htmlFor="lastKnownAddress" className="block text-sm font-medium text-gray-700">Last Known Address</label>
+                            <Field type="text" name="lastKnownAddress" className="p-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
+                            <ErrorMessage name="lastKnownAddress" component="div" className="text-red-500 text-sm mt-1"/>
+                        </div>
+                        <div className="form-group flex justify-between items-center">
+                            <button type="submit" disabled={isSubmitting} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                Update
+                            </button>
+                            <DeleteButton id={id} />
+                        </div>
                     </Form>
                 )}
             </Formik>

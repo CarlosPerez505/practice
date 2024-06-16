@@ -58,7 +58,7 @@ export default HomePage; */
 import React, { useState, useEffect } from 'react';
 import Map from "../../components/map/Map.jsx";
 import Carousel from '../../components/carousel/Carousel.jsx';
-import './HomePage.css';
+
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Hero from "../../components/Hero.jsx";

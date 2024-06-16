@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // Make sure to import Link from react-router-dom
-import './SearchCases.css'
+import { Link } from 'react-router-dom';
+import DeleteButton from '../DeleteButton.jsx';
 
 function SearchCases({ onSelectCase }) {
     const [searchTerm, setSearchTerm] = useState('');
@@ -8,7 +8,6 @@ function SearchCases({ onSelectCase }) {
 
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
-        // You might also want to implement a live search or debouncing here
     };
 
     const handleSearch = () => {
@@ -18,11 +17,11 @@ function SearchCases({ onSelectCase }) {
                 if (!response.ok) {
                     throw new Error(`Network response was not ok: ${response.status}`);
                 }
-                return response.json(); // Use text() to read the response and not assume it's JSON
+                return response.json();
             })
             .then(data => {
-                    console.log("Data received:", data);
-                    setCases(data);
+                console.log("Data received:", data);
+                setCases(data);
             })
             .catch(error => console.error('Error fetching data:', error));
     };
@@ -34,31 +33,52 @@ function SearchCases({ onSelectCase }) {
         }
     };
 
-
-
-
-
     return (
         <div className="flex justify-center">
-            <div className="mt-14 w-6/12">
-                <p>
+            <div className="mt-14 w-full max-w-3xl px-4">
+                <p className="mb-4 text-lg text-gray-700">
                     Search cases in the database or create a new case below
                 </p>
-                <input className="p-3"
-                    type="text"
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                       onKeyDown={handleKeyDown}
-                    placeholder="Search cases..."
-                />
-                <button onClick={handleSearch}
-                        className="bg-primary text-white p-2 rounded mt-5 mb-5">Search</button>
-                <ul>
+                <div className="flex flex-col sm:flex-row items-center mb-4 space-y-4 sm:space-y-0 sm:space-x-4">
+                    <input
+                        className="flex-grow w-full sm:flex-grow-0 p-3 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                        type="text"
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        onKeyDown={handleKeyDown}
+                        placeholder="Search cases..."
+                    />
+                    <button
+                        onClick={handleSearch}
+                        className="bg-blue-500 hover:bg-blue-700 text-white p-3 rounded-lg w-full sm:w-auto"
+                    >
+                        Search
+                    </button>
+                </div>
+                <ul className="space-y-4">
                     {cases.map((caseItem) => (
-                        <li key={caseItem.id} onClick={() => onSelectCase(caseItem)}>
-                            {caseItem.name} - {caseItem.age} - {caseItem.lastSeenDate} - {caseItem.lastSeenLocation} - {caseItem.description} - {caseItem.reportedDate}
-                            {caseItem.lastPlaceOfEmployment}
-                            <Link to={`/admin/update/${caseItem.id}`}>Edit</Link>
+                        <li
+                            key={caseItem.id}
+                            className="p-4 border rounded-lg bg-slate-800 hover:bg-slate-700 text-white flex justify-between items-center"
+                            onClick={() => onSelectCase(caseItem)}
+                        >
+                            <div>
+                                <p className="font-semibold">{caseItem.name} - {caseItem.age}</p>
+                                <p>{caseItem.lastSeenDate} - {caseItem.lastSeenLocation}</p>
+                                <p>{caseItem.description}</p>
+                                <p>Reported Date: {caseItem.reportedDate}</p>
+                                <p>Last Place of Employment: {caseItem.lastPlaceOfEmployment}</p>
+                            </div>
+                            <div className="flex items-center space-x-4">
+                                <Link
+                                    to={`/admin/update/${caseItem.id}`}
+                                    className="text-blue-500 hover:underline"
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    Edit
+                                </Link>
+
+                            </div>
                         </li>
                     ))}
                 </ul>
