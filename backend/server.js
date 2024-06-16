@@ -4,7 +4,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import scraper from './scraper.js';
+import {scraper} from './Scraper.js';
 
 // Initialize MySQL connection
 const db = mysql.createConnection({
@@ -48,19 +48,58 @@ app.use((req, res, next) => {
     next();
 });
 
-// Scraper endpoint
+
 app.get('/api/scrape', async (req, res) => {
     const limit = parseInt(req.query.limit, 10) || 5;
 
     console.log(`Scrape endpoint called with limit: ${limit}`);
 
     try {
+        console.log('Starting scraper...');
+        await scraper(limit);
+        console.log('Scraper finished successfully');
+        res.status(200).send('Scraper finished successfully');
+    } catch (error) {
+        console.error('Scraping error:', error);
+        res.status(500).send('Scraping error');
+    }
+});
+// Scraper endpoint
+/*app.get('/api/scrape', async (req, res) => {
+    const limit = parseInt(req.query.limit, 10) || 5;
+    console.log(`Scrape endpoint called with limit: ${limit}`);
+
+    console.log(`Scrape endpoint called with limit: ${limit}`);
+    console.log('Scraper is starting...');
+
+    try {
         const data = await scraper.scrape(limit);
         console.log('Scraped data:', data);
         res.json(data);
+        console.log('Scraper has finished running.');
     } catch (error) {
         console.error('Scraping error:', error);
         res.status(500).send(error.message);
+        console.log('Scraper encountered an error.');
+    }
+});*/
+
+// Manual trigger endpoint for the scraper
+app.get('/api/manual-scrape', async (req, res) => {
+    const limit = parseInt(req.query.limit, 10) || 5;
+
+    console.log(`Manual scrape endpoint called with limit: ${limit}`);
+    console.log('Manual scraper is starting...');
+
+    try {
+        const data = await scraper.scrape(limit);
+        console.log('Scraped data:', data);
+        res.json(data);
+        console.log('Manual scraper has finished running.');
+    } catch (error) {
+        console.error('Manual scraping error:', error);
+        res.status(500).send(error.message);
+        console.log('Manual scraper encountered an error.');
     }
 });
 
