@@ -5,7 +5,7 @@ import mysql from 'mysql2/promise';
     console.log("Scraper is running...");
 
     try {
-        const results = await scrape(20); // Limit to 5 records for example
+        const results = await scrape(40); // Limit to 5 records for example
         console.log("Scrape results:", results);
 
         if (!Array.isArray(results)) {
