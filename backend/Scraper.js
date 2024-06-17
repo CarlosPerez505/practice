@@ -1,4 +1,4 @@
-import puppeteer from "puppeteer";
+import puppeteer from 'puppeteer';
 import mysql from 'mysql2/promise';
 
 // Function to convert date format from MM/DD/YYYY to YYYY-MM-DD
@@ -17,10 +17,8 @@ export async function scrape(limit) {
         port: 3307
     });
 
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await puppeteer.launch({ headless: false }); // Set headless to false to see the browser actions
     const page = await browser.newPage();
-
-    const results = [];
 
     try {
         console.log('Scraper is running...');
@@ -40,7 +38,7 @@ export async function scrape(limit) {
         ]);
         console.log('Form submitted');
 
-        await page.waitForSelector('table[border="1"]', { timeout: 60000 });
+        await page.waitForSelector('table[border="1"]', { timeout: 90000 });
         console.log('Results table found');
 
         const links = await page.$$eval('table[border="1"] a', anchors => anchors.map(anchor => anchor.href));
@@ -59,6 +57,14 @@ export async function scrape(limit) {
                 const nameDetails = document.querySelector('div#MPImgTxt')?.innerText.trim() || '';
                 const [nameDetailsDate, name] = nameDetails.split(' - ');
 
+                // Attempting to extract the image URL correctly
+                const photoElement = document.querySelector('img');
+                let photoUrl = null;
+                if (photoElement && photoElement.src.includes('image_serv?id=')) {
+                    const photoId = photoElement.src.split('id=')[1];
+                    photoUrl = `http://missingpersons.dps.state.nm.us/mpweb/image_serv?id=${photoId}`;
+                }
+
                 return {
                     name: name || '',
                     missingDate: getTextByLabel('Date Missing:'),
@@ -72,12 +78,73 @@ export async function scrape(limit) {
                     height: getTextByLabel('Height:'),
                     weight: parseFloat(getTextByLabel('Weight:')),
                     hairColor: getTextByLabel('Hair Color:'),
-                    race: getTextByLabel('Race:')
+                    race: getTextByLabel('Race:'),
+                    photo1: photoUrl
                 };
             });
 
+            // If the photoUrl is null, try to click the image to get the correct URL
+            if (!detail.photo1) {
+                const imgElement = await page.$('img');
+                if (imgElement) {
+                    await imgElement.click();
+                    await page.waitForNavigation({ waitUntil: 'networkidle2' });
+                    const newPhotoUrl = await page.evaluate(() => {
+                        const photoElement = document.querySelector('img');
+                        return photoElement ? photoElement.src : null;
+                    });
+                    detail.photo1 = newPhotoUrl;
+                }
+            }
+
             console.log('Scraped detail:', detail);
-            results.push(detail);
+
+            const missingCase = {
+                name: detail.name,
+                age: detail.ageNow || detail.ageThen,
+                lastSeenDate: formatDate(detail.missingDate),
+                lastSeenLocation: detail.missingFrom,
+                description: detail.description,
+                reportedDate: null,
+                eyeColor: detail.eyeColor,
+                sex: detail.sex,
+                firstName: detail.name.split(' ')[0] || '',
+                hairColor: detail.hairColor,
+                height: detail.height,
+                tattoos: null,
+                hobbiesAndInterests: null,
+                identifyingMarks: null,
+                lastName: detail.name.split(' ').slice(1).join(' ') || '',
+                lastLatitude: null,
+                lastLongitude: null,
+                photo1: detail.photo1 || null, // Ensure photo1 is not undefined
+                tribe: detail.race,
+                weight: isNaN(detail.weight) ? null : detail.weight,
+                lastKnownAddress: null,
+                lastPlaceOfEmployment: null,
+                school: null,
+                temp_dateOfBirth: formatDate(detail.dob),
+                dateOfBirth: formatDate(detail.dob)
+            };
+
+            console.log('Mapped data:', missingCase);
+
+            const columns = Object.keys(missingCase);
+            const values = Object.values(missingCase);
+
+            // Check for undefined values and replace them with null
+            const cleanedValues = values.map(value => value === undefined ? null : value);
+
+            if (columns.length !== cleanedValues.length) {
+                console.log('Column count and value count do not match:', cleanedValues);
+                continue;
+            }
+
+            const placeholders = columns.map(() => '?').join(', ');
+            const sql = `INSERT INTO missingCases (${columns.join(', ')}) VALUES (${placeholders})`;
+
+            await connection.execute(sql, cleanedValues);
+            console.log('Inserted data into database for', missingCase.name);
         }
 
     } catch (error) {
@@ -86,6 +153,7 @@ export async function scrape(limit) {
         await browser.close();
         await connection.end();
     }
-
-    return results;
 }
+
+// Run the scraper
+scrape(40); // You can change the limit as needed

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import axios from 'axios';
 import DeleteButton from '../../components/DeleteButton.jsx';
 
 const UpdateForm = () => {
@@ -23,19 +24,22 @@ const UpdateForm = () => {
         lastPlaceOfEmployment: '',
         school: '',
         dateOfBirth: '',
+        temp_dateOfBirth: ''
     });
     const { id } = useParams();
     const navigate = useNavigate();
 
     useEffect(() => {
         if (id) {
-            fetch(`http://10.0.0.163:5000/api/missingCases/${id}`)
-                .then(response => response.json())
-                .then(data => {
+            axios.get(`http://10.0.0.163:5000/api/missingCases/${id}`)
+                .then(response => {
+                    const data = response.data;
                     const formattedData = {
                         ...data,
                         lastSeenDate: formatDate(data.lastSeenDate),
                         reportedDate: formatDate(data.reportedDate),
+                        dateOfBirth: formatDate(data.dateOfBirth),
+                        temp_dateOfBirth: formatDate(data.temp_dateOfBirth)
                     };
                     setInitialValues(formattedData);
                 })
@@ -43,11 +47,11 @@ const UpdateForm = () => {
         }
     }, [id]);
 
-    function formatDate(dateString) {
+    const formatDate = (dateString) => {
         if (!dateString) return '';
         const date = new Date(dateString);
-        return date.toISOString().split('T')[0];
-    }
+        return date.toISOString().split('T')[0]; // Returns YYYY-MM-DD format
+    };
 
     const validationSchema = Yup.object().shape({
         name: Yup.string().nullable(),
@@ -58,13 +62,6 @@ const UpdateForm = () => {
         reportedDate: Yup.date().nullable(),
         eyeColor: Yup.string().nullable(),
         sex: Yup.string().nullable(),
-        firstName: Yup.string().nullable(),
-        hairColor: Yup.string().nullable(),
-        height: Yup.string().nullable(),
-        tattoos: Yup.string().nullable(),
-        hobbiesAndInterests: Yup.string().nullable(),
-        identifyingMarks: Yup.string().nullable(),
-        lastName: Yup.string().nullable(),
         lastLatitude: Yup.number().nullable(),
         lastLongitude: Yup.number().nullable(),
         photo1: Yup.string().nullable(),
@@ -73,35 +70,33 @@ const UpdateForm = () => {
         lastKnownAddress: Yup.string().nullable(),
         lastPlaceOfEmployment: Yup.string().nullable(),
         school: Yup.string().nullable(),
-        temp_dateOfBirth: Yup.date().nullable(),
         dateOfBirth: Yup.date().nullable(),
+        temp_dateOfBirth: Yup.date().nullable(),
     });
+
+    const handleSubmit = (values, { setSubmitting }) => {
+        const formattedValues = {
+            ...values,
+            lastSeenDate: values.lastSeenDate || null,
+            reportedDate: values.reportedDate || null,
+            dateOfBirth: values.dateOfBirth || null,
+            temp_dateOfBirth: values.temp_dateOfBirth || null
+        };
+
+        axios.patch(`http://10.0.0.163:5000/api/missingCases/${id}`, formattedValues)
+            .then(() => navigate('/'))
+            .catch(error => console.error('Error:', error))
+            .finally(() => setSubmitting(false));
+    };
+
     return (
         <div className="max-w-4xl mx-auto mt-10 p-6 bg-slate-800 rounded-lg shadow-md">
             <h1 className="text-2xl font-bold mb-6">Update Missing Case</h1>
             <Formik
-                enableReinitialize // Important: This allows Formik to reinitialize with new initial values
+                enableReinitialize
                 initialValues={initialValues}
                 validationSchema={validationSchema}
-                onSubmit={(values, { setSubmitting }) => {
-                    // Remove null or empty fields
-                    const filteredValues = Object.keys(values).reduce((acc, key) => {
-                        if (values[key] !== '' && values[key] !== null && values[key] !== undefined) {
-                            acc[key] = values[key];
-                        }
-                        return acc;
-                    }, {});
-
-                    fetch(`http://10.0.0.163:5000/api/missingCases/${id}`, {
-                        method: 'PATCH',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(filteredValues),
-                    })
-                        .then(response => response.json())
-                        .then(() => navigate('/'))
-                        .catch(error => console.error('Error:', error))
-                        .finally(() => setSubmitting(false));
-                }}
+                onSubmit={handleSubmit}
             >
                 {({ isSubmitting }) => (
                     <Form className="space-y-6">
@@ -176,7 +171,7 @@ const UpdateForm = () => {
                             <ErrorMessage name="lastLongitude" component="div" className="text-red-500 text-sm mt-1"/>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="photo1" className="block text-sm font-medium text-gray-700">Photo</label>
+                            <label htmlFor="photo1" className="block text-sm font-medium text-gray-700">Photo URL</label>
                             <Field type="text" name="photo1" className="p-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
                             <ErrorMessage name="photo1" component="div" className="text-red-500 text-sm mt-1"/>
                         </div>
@@ -204,6 +199,11 @@ const UpdateForm = () => {
                             <label htmlFor="dateOfBirth" className="block text-sm font-medium text-gray-700">Date Of Birth</label>
                             <Field type="date" name="dateOfBirth" className="p-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
                             <ErrorMessage name="dateOfBirth" component="div" className="text-red-500 text-sm mt-1"/>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="temp_dateOfBirth" className="block text-sm font-medium text-gray-700">Temporary Date Of Birth</label>
+                            <Field type="date" name="temp_dateOfBirth" className="p-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
+                            <ErrorMessage name="temp_dateOfBirth" component="div" className="text-red-500 text-sm mt-1"/>
                         </div>
                         <div className="form-group">
                             <label htmlFor="lastKnownAddress" className="block text-sm font-medium text-gray-700">Last Known Address</label>

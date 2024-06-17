@@ -156,6 +156,15 @@ app.patch('/api/missingCases/:id', (req, res) => {
 
     const setClause = Object.keys(updateFields).map(key => `${key} = ?`).join(', ');
     const queryParams = [...Object.values(updateFields), id];
+
+    // Format date fields to 'YYYY-MM-DD'
+    if (updateFields.temp_dateOfBirth) {
+        updateFields.temp_dateOfBirth = formatDate(updateFields.temp_dateOfBirth);
+    }
+    if (updateFields.dateOfBirth) {
+        updateFields.dateOfBirth = formatDate(updateFields.dateOfBirth);
+    }
+
     const query = `UPDATE missingCases SET ${setClause} WHERE id = ?`;
 
     db.query(query, queryParams, (err, result) => {
@@ -169,6 +178,13 @@ app.patch('/api/missingCases/:id', (req, res) => {
         res.status(200).json({ message: 'Entry updated successfully' });
     });
 });
+
+function formatDate(dateString) {
+    if (!dateString) return null;
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0]; // Returns YYYY-MM-DD format
+}
+
 
 app.delete('/api/missingCases/:id', (req, res) => {
     const { id } = req.params;

@@ -2,13 +2,15 @@ import React from 'react';
 import { Link } from "react-router-dom";
 
 const ProfileCard = ({ profile }) => {
+    const placeholderImage = "https://via.placeholder.com/150"; // Placeholder image URL
+
     return (
         <div className="max-w-sm rounded overflow-hidden shadow-lg bg-gray-800 text-white m-4">
             <img
-                src={profile.photo1}
+                src={profile.photo1 || placeholderImage}
                 alt={`${profile.name}'s picture`}
                 loading="lazy"
-                className="w-full h-48 object-contain"
+                className="w-full h-48 object-contain bg-gray-700"
             />
             <div className="px-6 py-4">
                 <div className="font-bold text-xl mb-2">{profile.name}</div>
@@ -38,3 +40,4 @@ const ProfileCard = ({ profile }) => {
 };
 
 export default ProfileCard;
+

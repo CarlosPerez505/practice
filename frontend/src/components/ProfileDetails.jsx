@@ -36,6 +36,8 @@ const ProfileDetails = () => {
                 <p><strong>Longitude:</strong>{profile.longitude}</p>
                 <p><strong>Tribe:</strong>{profile.tribe}</p>
                 <p><strong>Weight:</strong>{profile.weight}</p>
+                <p><strong>Photo</strong><img src={profile.photo1} alt="profile picture"/></p>
+
             </div>
             <div className="p-4">
                 <h2 className="text-xl font-bold mt-4 mb-2">Vehicle Information</h2>
