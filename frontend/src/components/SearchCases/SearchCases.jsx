@@ -47,6 +47,7 @@ function SearchCases({ onSelectCase }) {
                         onChange={handleSearchChange}
                         onKeyDown={handleKeyDown}
                         placeholder="Search cases..."
+                        aria-label="Search cases"
                     />
                     <button
                         onClick={handleSearch}
@@ -74,10 +75,18 @@ function SearchCases({ onSelectCase }) {
                                     to={`/admin/update/${caseItem.id}`}
                                     className="text-blue-500 hover:underline"
                                     onClick={(e) => e.stopPropagation()}
+                                    aria-label={`Edit case ${caseItem.name}`}
                                 >
                                     Edit
                                 </Link>
-
+                                <DeleteButton
+                                    caseId={caseItem.id}
+                                    onDeleteSuccess={() => {
+                                        // Remove the deleted case from the list
+                                        setCases(cases.filter(item => item.id !== caseItem.id));
+                                    }}
+                                    onClick={(e) => e.stopPropagation()}
+                                />
                             </div>
                         </li>
                     ))}
@@ -88,3 +97,4 @@ function SearchCases({ onSelectCase }) {
 }
 
 export default SearchCases;
+

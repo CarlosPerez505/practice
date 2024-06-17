@@ -3,41 +3,38 @@ import './CreateMissingCase.css';
 import SearchCases from "../../components/SearchCases/SearchCases.jsx";
 
 function CreateMissingCase() {
-    // Initialize formData with the structure of your case object
     const [formData, setFormData] = useState({
         id: '',
         name: '',
         age: '',
-        lastSeenDate: '', // Make sure the names match your database columns
-        lastSeenLocation:'',
+        lastSeenDate: '',
+        lastSeenLocation: '',
         description: '',
         reportedDate: '',
         eyeColor: '',
         sex: '',
-        height:'',
-        tattoos:'',
-        IdentifyingMarks:'',
-        lastLatitude:'',
-        lastLongitude:'',
-        photo1:'',
-        weight:'',
+        hairColor: '',
+        height: '',
+        tattoos: '',
+        identifyingMarks: '',
+        lastLatitude: '',
+        lastLongitude: '',
+        photo1: '',
+        weight: '',
         lastKnownAddress: '',
-        lastPlaceOfEmployment:'',
-        school:'',
-        dateOfBirth:'',
+        lastPlaceOfEmployment: '',
+        school: '',
+        dateOfBirth: '',
     });
 
-    // State hooks for UI feedback messages
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
     const [showErrorMessage, setShowErrorMessage] = useState(false);
     const [formErrors, setFormErrors] = useState({});
     const [cases, setCases] = useState([]);
 
-
     useEffect(() => {
         fetchCases();
     }, []);
-
 
     const fetchCases = () => {
         fetch('http://10.0.0.163:5000/api/missingCases')
@@ -46,18 +43,15 @@ function CreateMissingCase() {
             .catch(error => console.error('Error fetching cases:', error));
     };
 
-
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Validate form data
         const errors = validateFormData(formData);
         if (Object.keys(errors).length > 0) {
-            // Handle errors
-            console.error('Validation errors:', errors);
-            // Optionally, display these errors to the user
-            setShowErrorMessage('Please correct the errors before submitting.');
-            return; // Stop the submission since there are errors
+            setFormErrors(errors);
+            setShowErrorMessage(true);
+            setShowSuccessMessage(false);
+            return;
         }
 
         const requestOptions = {
@@ -68,15 +62,12 @@ function CreateMissingCase() {
             body: JSON.stringify(formData),
         };
 
-
-        // Fetch request to create
         fetch('http://10.0.0.163:5000/api/missingCases', requestOptions)
             .then(response => response.json())
             .then(data => {
                 console.log('Success:', data);
                 setShowSuccessMessage(true);
                 setShowErrorMessage(false);
-                // Optionally, clear the form or reset to initial state
                 setFormData({
                     id: '',
                     name: '',
@@ -87,19 +78,20 @@ function CreateMissingCase() {
                     reportedDate: '',
                     eyeColor: '',
                     sex: '',
-                    hairColor:'',
-                    height:'',
-                    tattoos:'',
-                    IdentifyingMarks:'',
-                    lastLatitude:'',
-                    lastLongitude:'',
-                    photo1:'',
-                    weight:'',
+                    hairColor: '',
+                    height: '',
+                    tattoos: '',
+                    identifyingMarks: '',
+                    lastLatitude: '',
+                    lastLongitude: '',
+                    photo1: '',
+                    weight: '',
                     lastKnownAddress: '',
-                    lastPlaceOfEmployment:'',
-                    school:'',
-                    dateOfBirth:'',
+                    lastPlaceOfEmployment: '',
+                    school: '',
+                    dateOfBirth: '',
                 });
+                setFormErrors({});
             })
             .catch((error) => {
                 console.error('Error:', error);
@@ -108,50 +100,37 @@ function CreateMissingCase() {
             });
     };
 
-
-
     const validateFormData = (data) => {
         let errors = {};
 
-        // Validate Name
         if (!data.name.trim()) {
             errors.name = 'Name is required';
         }
 
-        // Validate Age
         if (!data.age) {
             errors.age = 'Age is required';
         } else if (isNaN(data.age) || data.age < 0 || data.age > 120) {
             errors.age = 'Age must be a number between 0 and 120';
         }
 
-        // Validate Last Seen Date
-        // Assuming lastSeenDate is in YYYY-MM-DD format
         if (data.lastSeenDate && isNaN(Date.parse(data.lastSeenDate))) {
             errors.lastSeenDate = 'Invalid date format';
         }
 
-        // Validate Last Seen Location
         if (!data.lastSeenLocation.trim()) {
             errors.lastSeenLocation = 'Last seen location is required';
         }
 
-        // Validate Description
         if (!data.reportedDate.trim()) {
             errors.reportedDate = 'Reported date is required';
         }
 
-
-
-        // Validate Description
         if (!data.sex.trim()) {
-            errors.sex = 'Sex of missing is required';
+            errors.sex = 'Sex is required';
         }
 
         return errors;
     };
-
-
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -159,19 +138,17 @@ function CreateMissingCase() {
             ...prevState,
             [name]: value,
         }));
-        // Clear error message for the field if it exists
+
         if (formErrors[name]) {
             setFormErrors(prevErrors => ({
                 ...prevErrors,
-                [name]: undefined, // Remove the error message for this field
+                [name]: undefined,
             }));
         }
     };
 
-
     return (
         <div>
-
             <div>
                 <form className="bg-slate-800 p-10" onSubmit={handleSubmit}>
                     <h1>Create Missing Case</h1>
@@ -201,7 +178,7 @@ function CreateMissingCase() {
                         {formErrors.age && <div className="error-message">{formErrors.age}</div>}
                     </div>
                     <div className="form-group">
-                        <label htmlFor="date">Last Seen Date</label>
+                        <label htmlFor="lastSeenDate">Last Seen Date</label>
                         <input
                             type="date"
                             name="lastSeenDate"
@@ -280,7 +257,7 @@ function CreateMissingCase() {
                         <label htmlFor="height">Height</label>
                         <input
                             type="text"
-                            name="reportedDate"
+                            name="height"
                             value={formData.height}
                             onChange={handleChange}
                             placeholder="Height"
@@ -382,7 +359,7 @@ function CreateMissingCase() {
                             name="lastPlaceOfEmployment"
                             value={formData.lastPlaceOfEmployment}
                             onChange={handleChange}
-                            placeholder="Last Place OF Employment"
+                            placeholder="Last Place Of Employment"
                         />
                         {formErrors.lastPlaceOfEmployment && <div className="error-message">{formErrors.lastPlaceOfEmployment}</div>}
                     </div>
@@ -404,20 +381,18 @@ function CreateMissingCase() {
                             name="dateOfBirth"
                             value={formData.dateOfBirth}
                             onChange={handleChange}
-                            placeholder="Last Known Address"
+                            placeholder="Date Of Birth"
                         />
                         {formErrors.dateOfBirth && <div className="error-message">{formErrors.dateOfBirth}</div>}
                     </div>
                     <button className="bg-primary text-white p-2 rounded mt-5" type="submit">Create</button>
                 </form>
-
             </div>
-
-
         </div>
-
     );
 }
 
 export default CreateMissingCase;
+
+
 

@@ -15,7 +15,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/profile/:id" element={<ProfileDetails />} />
-                <Route path="/admin" element={<AdminDash />}>
+                <Route path="/admin/*" element={<AdminDash />}>
                     <Route path="create" element={<CreateMissingCase />} />
                     <Route path="update/:id" element={<UpdateForm />} />
                     <Route path="search" element={<SearchCases />} />

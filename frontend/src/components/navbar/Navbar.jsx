@@ -17,6 +17,9 @@ function Navbar() {
             <button onClick={handleAdminClick} className="text-white">
                 Admin
             </button>
+            <button className="text-white">
+                Resources
+            </button>
         </nav>
     );
 }
