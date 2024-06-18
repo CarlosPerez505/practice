@@ -72,3 +72,7 @@ body {
 .bg-gray-900 {
     background-color: #181818;
 }
+
+.chart-container {
+    @apply w-full h-96 md:h-128;
+}

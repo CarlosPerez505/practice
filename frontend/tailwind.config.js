@@ -22,6 +22,9 @@ module.exports = {
       backgroundImage: {
         'gradient-to-br': 'linear-gradient(to bottom right, var(--tw-gradient-stops))',
       },
+      height: {
+        '128': '32rem', // Add this line to define the custom height
+      },
     },
   },
   variants: {
