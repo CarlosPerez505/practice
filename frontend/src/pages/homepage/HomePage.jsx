@@ -12,6 +12,7 @@ import { setSelectedProfile, clearSelectedProfile } from '../../redux/slices/sel
 import About from "../../components/About.jsx";
 import MMIPChart from "../../components/MMIPChart.jsx";
 import MoreStatistics from "../../components/MoreStatistics.jsx";
+import Contact from "../../components/Contact.jsx";
 
 function HomePage() {
     const [women, setWomen] = useState([]);
@@ -69,17 +70,17 @@ function HomePage() {
     return (
         <div className="Homepage bg-gradient-to-br from-gradient-start via-gradient-middle to-gradient-end min-h-screen">
             <Hero />
-            <Carousel women={women} />
-            <div className="container mx-auto p-4">
+            <About id="about" />
+            <div className="mt-8">
+                <MMIPChart />
+                <MoreStatistics />
+            </div>
+            <div id="map" className="container mx-auto p-4">
                 <Map />
                 <header className="App-header my-8 text-center">
-                    <h1 className="text-4xl font-bold text-white">Missing Women</h1>
+                    <h1 id="profiles" className="text-4xl font-bold text-white">Missing People</h1>
                 </header>
-                <About />
-                <div className="mt-8">
-                    <MMIPChart />
-                    <MoreStatistics />
-                </div>
+
                 <div className="mt-8">
                     <h1 className="text-3xl font-bold text-center my-4 text-white">Missing Persons Profiles</h1>
                     <ProfilesList profiles={profiles} onProfileClick={handleProfileClick} />
@@ -87,6 +88,7 @@ function HomePage() {
                         <ProfileDetails profile={selectedProfile} onClose={() => dispatch(clearSelectedProfile())} />
                     )}
                 </div>
+                <Contact id="contact" />
             </div>
         </div>
     );

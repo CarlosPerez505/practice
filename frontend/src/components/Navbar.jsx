@@ -14,18 +14,21 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="bg-navbar-gradient text-white p-4 shadow-neumorphism">
+        <nav className="bg-transparent text-white p-4 shadow-lg">
             <div className="container mx-auto flex justify-between items-center">
                 <div className="text-2xl font-bold">Missing Persons App</div>
                 <div className="hidden md:flex space-x-6">
                     <RouterLink to="/" className="cursor-pointer hover:text-gray-400">
                         Home
                     </RouterLink>
-                    <ScrollLink to="profiles" smooth={true} duration={500} className="cursor-pointer hover:text-gray-400">
-                        Profiles
+                    <ScrollLink to="about" smooth={true} duration={500} className="cursor-pointer hover:text-gray-400">
+                        About
                     </ScrollLink>
                     <ScrollLink to="map" smooth={true} duration={500} className="cursor-pointer hover:text-gray-400">
                         Map
+                    </ScrollLink>
+                    <ScrollLink to="profiles" smooth={true} duration={500} className="cursor-pointer hover:text-gray-400">
+                        Profiles
                     </ScrollLink>
                     <ScrollLink to="contact" smooth={true} duration={500} className="cursor-pointer hover:text-gray-400">
                         Contact
@@ -47,11 +50,14 @@ const Navbar = () => {
                     <RouterLink to="/" className="cursor-pointer hover:text-gray-400" onClick={closeMenu}>
                         Home
                     </RouterLink>
-                    <ScrollLink to="profiles" smooth={true} duration={500} className="cursor-pointer hover:text-gray-400" onClick={closeMenu}>
-                        Profiles
+                    <ScrollLink to="about" smooth={true} duration={500} className="cursor-pointer hover:text-gray-400" onClick={closeMenu}>
+                        About
                     </ScrollLink>
                     <ScrollLink to="map" smooth={true} duration={500} className="cursor-pointer hover:text-gray-400" onClick={closeMenu}>
                         Map
+                    </ScrollLink>
+                    <ScrollLink to="profiles" smooth={true} duration={500} className="cursor-pointer hover:text-gray-400" onClick={closeMenu}>
+                        Profiles
                     </ScrollLink>
                     <ScrollLink to="contact" smooth={true} duration={500} className="cursor-pointer hover:text-gray-400" onClick={closeMenu}>
                         Contact
@@ -66,5 +72,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-

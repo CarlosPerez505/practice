@@ -1,10 +1,9 @@
+// src/redux/slices/selectedProfileSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = null;
-
-const selectedProfileSlice = createSlice({
+export const selectedProfileSlice = createSlice({
     name: 'selectedProfile',
-    initialState,
+    initialState: null,
     reducers: {
         setSelectedProfile: (state, action) => action.payload,
         clearSelectedProfile: () => null,

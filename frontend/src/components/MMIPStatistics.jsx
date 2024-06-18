@@ -1,42 +1,23 @@
 // src/components/MMIPStatistics.js
 
 import React from 'react';
-import { Bar } from 'react-chartjs-2';
-import 'chart.js/auto';
 
 const MMIPStatistics = () => {
-    const data = {
-        labels: ['2016', '2017', '2018', '2019', '2020', '2021'],
-        datasets: [
-            {
-                label: 'Missing Indigenous People Cases - Southwest',
-                data: [40, 45, 50, 55, 60, 70], // Example data
-                backgroundColor: 'rgba(255, 99, 132, 0.6)',
-            },
-        ],
-    };
-
-    const options = {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top',
-            },
-            title: {
-                display: true,
-                text: 'Missing Indigenous People Cases in the Southwest (2016-2021)',
-            },
-        },
-    };
-
     return (
-        <div className="w-full h-96 md:h-128 lg:h-160 p-4">
-            <Bar data={data} options={options} />
-            <p className="text-sm text-gray-600 mt-2">
-                Source: <a href="https://www.iad.nm.gov/programs-and-funding/missing-murdered-indigenous-persons/" target="_blank" rel="noopener noreferrer">New Mexico Indian Affairs Department</a>
+        <div className="bg-gray-800 text-white p-5 rounded-lg shadow-lg">
+            <h2 className="text-xl font-bold mb-3">Additional Statistics on Missing Indigenous People</h2>
+            <p>
+                According to the New Mexico Indian Affairs Department, the state has seen a significant increase in cases of missing and murdered Indigenous people. As of recent reports, there are numerous active cases that are under investigation.
+            </p>
+            <p className="mt-2">
+                The Bureau of Indian Affairs' Missing and Murdered Unit (MMU) works to provide leadership and direction for cross-departmental and interagency work involving missing and murdered American Indians and Alaska Natives. The MMU utilizes the National Missing and Unidentified Persons System (NamUs) to aid in this effort.
+            </p>
+            <p className="mt-2">
+                Source: <a href="https://www.iad.nm.gov/programs-and-funding/missing-murdered-indigenous-persons/" className="text-blue-400 hover:underline">New Mexico Indian Affairs Department</a>, <a href="https://www.bia.gov/service/mmu/missing-and-murdered-indigenous-people-crisis" className="text-blue-400 hover:underline">Bureau of Indian Affairs</a>
             </p>
         </div>
     );
 };
 
 export default MMIPStatistics;
+

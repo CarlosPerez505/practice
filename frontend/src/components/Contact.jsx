@@ -2,8 +2,11 @@ import React from 'react';
 
 const Contact = () => {
     return (
-        <div className="bg-gray-800 text-white p-8 rounded-lg shadow-neumorphism w-3/4 lg:w-3/4 mx-auto mt-16 mb-16">
-            <h1 className="text-3xl font-bold mb-4">Contact Us</h1>
+        <div id="contact" className="bg-gray-800 text-white p-8 rounded-lg shadow-neumorphism w-full lg:w-full mx-auto mt-16 mb-16">
+            <h1 className="text-3xl text-center font-bold mb-4">Contact Us</h1>
+            <p className="text-xl text-center p-3 leading-relaxed">
+                If you have any information regarding the missing persons or if you would like to get involved, please contact us.
+            </p>
             <form className="space-y-4">
                 <div className="flex flex-col">
                     <label className="mb-2 font-semibold" htmlFor="name">Name</label>
