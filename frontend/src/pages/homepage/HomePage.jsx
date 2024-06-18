@@ -11,10 +11,24 @@ import ProfileDetails from '../../components/ProfileDetails.jsx';
 import { setSelectedProfile, clearSelectedProfile } from '../../redux/slices/selectedProfileSlice';
 
 function HomePage() {
+    const [women, setWomen] = useState([]);
     const [profiles, setProfiles] = useState([]);
+    const [results, setResults] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const selectedProfile = useSelector(state => state.selectedProfile);
     const dispatch = useDispatch();
-    const selectedProfile = useSelector((state) => state.selectedProfile);
+
+    const fetchData = async () => {
+        try {
+            const response = await fetch('/scrape');
+            const data = await response.json();
+            setResults(data);
+        } catch (error) {
+            console.error('Fetch error:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     useEffect(() => {
         console.log('Fetching data...');
@@ -38,6 +52,10 @@ function HomePage() {
         console.log('Selected profile:', selectedProfile);
     }, [selectedProfile]);
 
+    const handleProfileClick = (profile) => {
+        dispatch(setSelectedProfile(profile));
+    };
+
     if (isLoading) {
         console.log('Loading...');
         return <LoadingScreen />;
@@ -46,16 +64,16 @@ function HomePage() {
     console.log('Rendering HomePage with profiles:', profiles);
 
     return (
-        <div className="Homepage">
+        <div className="Homepage bg-gradient-to-br from-gradient-start via-gradient-middle to-gradient-end min-h-screen">
             <Hero />
-            <Carousel women={[]} />
+            <Carousel women={women} />
             <Map />
             <header className="App-header">
                 <h1>Missing Women</h1>
             </header>
             <div className="container mx-auto p-4">
                 <h1 className="text-3xl font-bold text-center my-4">Missing Persons Profiles</h1>
-                <ProfilesList profiles={profiles} onProfileClick={(profile) => dispatch(setSelectedProfile(profile))} />
+                <ProfilesList profiles={profiles} onProfileClick={handleProfileClick} />
                 {selectedProfile && (
                     <ProfileDetails profile={selectedProfile} onClose={() => dispatch(clearSelectedProfile())} />
                 )}

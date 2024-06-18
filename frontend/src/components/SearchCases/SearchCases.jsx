@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import DeleteButton from '../DeleteButton.jsx';
 
-function SearchCases({ onSelectCase }) {
+function SearchCases() {
     const [searchTerm, setSearchTerm] = useState('');
     const [cases, setCases] = useState([]);
 
@@ -47,7 +47,6 @@ function SearchCases({ onSelectCase }) {
                         onChange={handleSearchChange}
                         onKeyDown={handleKeyDown}
                         placeholder="Search cases..."
-                        aria-label="Search cases"
                     />
                     <button
                         onClick={handleSearch}
@@ -61,7 +60,6 @@ function SearchCases({ onSelectCase }) {
                         <li
                             key={caseItem.id}
                             className="p-4 border rounded-lg bg-slate-800 hover:bg-slate-700 text-white flex justify-between items-center"
-                            onClick={() => onSelectCase(caseItem)}
                         >
                             <div>
                                 <p className="font-semibold">{caseItem.name} - {caseItem.age}</p>
@@ -74,19 +72,10 @@ function SearchCases({ onSelectCase }) {
                                 <Link
                                     to={`/admin/update/${caseItem.id}`}
                                     className="text-blue-500 hover:underline"
-                                    onClick={(e) => e.stopPropagation()}
-                                    aria-label={`Edit case ${caseItem.name}`}
                                 >
                                     Edit
                                 </Link>
-                                <DeleteButton
-                                    caseId={caseItem.id}
-                                    onDeleteSuccess={() => {
-                                        // Remove the deleted case from the list
-                                        setCases(cases.filter(item => item.id !== caseItem.id));
-                                    }}
-                                    onClick={(e) => e.stopPropagation()}
-                                />
+                                <DeleteButton caseId={caseItem.id} />
                             </div>
                         </li>
                     ))}

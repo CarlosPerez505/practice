@@ -156,4 +156,4 @@ export async function scrape(limit) {
 }
 
 // Run the scraper
-scrape(40); // You can change the limit as needed
+scrape(25); // You can change the limit as needed
