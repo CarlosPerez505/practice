@@ -1,30 +1,32 @@
-# Step 1: Build the React app in production mode
-FROM node:18 as build
+# Stage 1: Build the React app
+FROM node:18 AS build
 
-# Set the working directory inside the container to /app
+# Set the working directory
 WORKDIR /app
 
-# Copy the package.json, package-lock.json, and vite.config.js
-COPY package*.json vite.config.js ./
+# Copy package.json and package-lock.json
+COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy the rest of your app's source code from your host to your image filesystem.
+# Copy the rest of the application code
 COPY . .
 
-# Build the app for production to the build folder
+# Build the app
 RUN npm run build
 
-# Step 2: Serve the React app using a static file server
-FROM nginx:stable-alpine
+# Stage 2: Serve the app with Nginx
+FROM nginx:alpine
 
-# Copy the build output to replace the default nginx contents.
+# Copy the build output to Nginx's HTML directory
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Expose port 80 to the Docker host, so we can access it
-# from the outside.
+# Copy custom Nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Expose the port Nginx is serving on
 EXPOSE 80
 
-# Start nginx
+# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]

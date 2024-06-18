@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 const About = () => {
     return (
         <div className="bg-gray-800 text-white p-8 rounded-lg shadow-neumorphism w-full lg:w-full mx-auto mt-16 mb-16">

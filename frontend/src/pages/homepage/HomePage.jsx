@@ -9,6 +9,9 @@ import ProfilesList from "../../components/ProfileList.jsx";
 import LoadingScreen from "./../../components/loadingScreen.jsx";
 import ProfileDetails from '../../components/ProfileDetails.jsx';
 import { setSelectedProfile, clearSelectedProfile } from '../../redux/slices/selectedProfileSlice';
+import About from "../../components/About.jsx";
+import PopularVoteChart from "../../components/MMIPChart.jsx";
+import MMIPChart from "../../components/MMIPChart.jsx";
 
 function HomePage() {
     const [women, setWomen] = useState([]);
@@ -71,6 +74,10 @@ function HomePage() {
             <header className="App-header">
                 <h1>Missing Women</h1>
             </header>
+            <About/>
+            <div className="App">
+                <MMIPChart/>
+            </div>
             <div className="container mx-auto p-4">
                 <h1 className="text-3xl font-bold text-center my-4">Missing Persons Profiles</h1>
                 <ProfilesList profiles={profiles} onProfileClick={handleProfileClick} />
