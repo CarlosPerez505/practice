@@ -1,3 +1,4 @@
+// src/pages/HomePage.jsx
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Map from "../../components/map/Map.jsx";
@@ -13,20 +14,19 @@ import About from "../../components/About.jsx";
 import MMIPChart from "../../components/MMIPChart.jsx";
 import MoreStatistics from "../../components/MoreStatistics.jsx";
 import Contact from "../../components/Contact.jsx";
+import TranslateToNavajo from '../../components/TranslateToNavajo';
 
 function HomePage() {
-    const [women, setWomen] = useState([]);
     const [profiles, setProfiles] = useState([]);
-    const [results, setResults] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const selectedProfile = useSelector(state => state.selectedProfile);
     const dispatch = useDispatch();
 
     const fetchData = async () => {
         try {
-            const response = await fetch('/scrape');
+            const response = await fetch('http://10.0.0.163:5000/api/missingCases');
             const data = await response.json();
-            setResults(data);
+            setProfiles(data);
         } catch (error) {
             console.error('Fetch error:', error);
         } finally {
@@ -35,42 +35,27 @@ function HomePage() {
     };
 
     useEffect(() => {
-        console.log('Fetching data...');
-        fetch('http://10.0.0.163:5000/api/missingCases')
-            .then(response => {
-                console.log('Response received:', response);
-                return response.json();
-            })
-            .then(data => {
-                console.log('Data fetched:', data);
-                setProfiles(data);
-            })
-            .catch(error => console.error('Error fetching data:', error))
-            .finally(() => {
-                console.log('Fetch complete');
-                setIsLoading(false);
-            });
+        fetchData();
     }, []);
-
-    useEffect(() => {
-        console.log('Selected profile:', selectedProfile);
-    }, [selectedProfile]);
 
     const handleProfileClick = (profile) => {
         dispatch(setSelectedProfile(profile));
     };
 
     if (isLoading) {
-        console.log('Loading...');
         return <LoadingScreen />;
     }
 
-    console.log('Rendering HomePage with profiles:', profiles);
+    const textContents = {
+        Hero: "Empowering Communities to Find the Missing Through the Power of Modern Data Collection and Web Technologies.",
+        About: "The Red Palm Project is an innovative and dedicated initiative aimed at raising awareness and providing comprehensive information about missing Indigenous people, particularly in the Southwest region.",
+        Map: "Interactive Mapping: Integrated with Mapbox, the application provides a visual representation of missing persons' last known locations, enhancing the search and awareness efforts."
+    };
 
     return (
         <div className="Homepage bg-gradient-to-br from-gradient-start via-gradient-middle to-gradient-end min-h-screen">
             <Hero />
-            <About id="about" />
+            <About/>
             <div className="mt-8">
                 <MMIPChart />
                 <MoreStatistics />
@@ -88,10 +73,13 @@ function HomePage() {
                         <ProfileDetails profile={selectedProfile} onClose={() => dispatch(clearSelectedProfile())} />
                     )}
                 </div>
-                <Contact id="contact" />
+                <Contact/>
             </div>
+            <TranslateToNavajo texts={textContents} />
         </div>
     );
 }
 
 export default HomePage;
+
+

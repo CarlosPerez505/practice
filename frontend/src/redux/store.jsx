@@ -1,15 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
-import sidebarReducer from './slices/sideBarSlice';
-import missingPersonsReducer from './slices/missingPersonsSlice';
+import profilesReducer from './slices/missingPersonsSlice';
+import predictionsReducer from './slices/predictionsSlice';
 import selectedProfileReducer from './slices/selectedProfileSlice';
 
 const store = configureStore({
     reducer: {
-        sidebar: sidebarReducer,
-        missingPersons: missingPersonsReducer,
+        profiles: profilesReducer,
+        predictions: predictionsReducer,
         selectedProfile: selectedProfileReducer,
     },
-    devTools: process.env.NODE_ENV !== 'production', // Enable Redux DevTools only in development
 });
 
 export default store;
+

@@ -1,3 +1,4 @@
+// server.js
 import express from 'express';
 import mysql from 'mysql2';
 import cors from 'cors';
@@ -5,13 +6,20 @@ import morgan from 'morgan';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+const app = express();
+
+// Hardcoded API key
+const openAiApiKey = 'sk-proj-JN19JBhslnLyt3o54L0ST3BlbkFJgv8OF65XaxVCyOu4ToXc';
+
+console.log(`Your OpenAI API key is: ${openAiApiKey}`); // For testing purposes
+
 // Initialize MySQL connection
 const db = mysql.createConnection({
-    host: 'localhost',
+    host: '127.0.0.1',  // Use '127.0.0.1' to avoid issues with IPv6
     user: 'root',
     password: 'data',
     database: 'missing_person_db',
-    port: 3307
+    port: 3307  // Ensure this port is correct
 });
 
 // Attempt to connect to the MySQL database
@@ -23,7 +31,7 @@ db.connect((err) => {
     console.log('Connected to the database.');
 });
 
-const app = express();
+const PORT = 5000; // Ensure this is defined before use
 
 // Update the allowed origins to include localhost and your network IP
 const allowedOrigins = ['http://10.0.0.163:5173', 'http://localhost:5173', 'http://172.18.32.1:5173'];
@@ -47,7 +55,7 @@ app.use((req, res, next) => {
     next();
 });
 
-
+// Define your endpoints
 app.get('/api/scrape', async (req, res) => {
     const limit = parseInt(req.query.limit, 10) || 5;
 
@@ -63,27 +71,6 @@ app.get('/api/scrape', async (req, res) => {
         res.status(500).send('Scraping error');
     }
 });
-// Scraper endpoint
-/*app.get('/api/scrape', async (req, res) => {
-    const limit = parseInt(req.query.limit, 10) || 5;
-    console.log(`Scrape endpoint called with limit: ${limit}`);
-
-    console.log(`Scrape endpoint called with limit: ${limit}`);
-    console.log('Scraper is starting...');
-
-    try {
-        const data = await scraper.scrape(limit);
-        console.log('Scraped data:', data);
-        res.json(data);
-        console.log('Scraper has finished running.');
-    } catch (error) {
-        console.error('Scraping error:', error);
-        res.status(500).send(error.message);
-        console.log('Scraper encountered an error.');
-    }
-});*/
-
-// Manual trigger endpoint for the scraper
 
 // API endpoints for managing missing cases
 app.get('/api/missingCases/search', (req, res) => {
@@ -194,17 +181,12 @@ app.get('/test', (req, res) => {
 // Catch-all handler to serve the React app for any other requests
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
+    res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 });
 
-// This will catch any requests to endpoints that don't exist in your application.
-app.all('*', (req, res) => {
-    res.status(404).json({ error: 'Endpoint not found' });
-});
-
-// Start the server on the specified port
-const PORT = 5000;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running at http://0.0.0.0:${PORT}`);
 });

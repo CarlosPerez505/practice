@@ -33,6 +33,9 @@ const Navbar = () => {
                     <ScrollLink to="contact" smooth={true} duration={500} className="cursor-pointer hover:text-gray-400">
                         Contact
                     </ScrollLink>
+                    <RouterLink to="/openai" className="cursor-pointer hover:text-gray-400">
+                        OpenAI
+                    </RouterLink>
                     <RouterLink to="/admin" className="cursor-pointer hover:text-gray-400">
                         Admin
                     </RouterLink>
@@ -62,6 +65,9 @@ const Navbar = () => {
                     <ScrollLink to="contact" smooth={true} duration={500} className="cursor-pointer hover:text-gray-400" onClick={closeMenu}>
                         Contact
                     </ScrollLink>
+                    <RouterLink to="/openai" className="cursor-pointer hover:text-gray-400" onClick={closeMenu}>
+                        OpenAI
+                    </RouterLink>
                     <RouterLink to="/admin" className="cursor-pointer hover:text-gray-400" onClick={closeMenu}>
                         Admin
                     </RouterLink>

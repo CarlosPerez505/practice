@@ -1,56 +1,40 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
 
-// Initial state
-const initialState = {
-    missingPersons: [],
-    loading: false,
-    error: null,
-};
-
-// Async thunk for fetching missing persons
-export const fetchMissingPersons = createAsyncThunk(
-    'missingPersons/fetchMissingPersons',
+// Async thunk to fetch profiles
+export const fetchProfiles = createAsyncThunk(
+    'profiles/fetchProfiles',
     async () => {
-        const response = await axios.get('/api/missingPersons'); // Adjust the URL to your API endpoint
-        return response.data;
+        const response = await fetch('http://10.0.0.163:5000/api/missingCases');
+        const data = await response.json();
+        console.log('Data fetched:', data); // Debugging log
+        return data;
     }
 );
 
 const missingPersonsSlice = createSlice({
-    name: 'missingPersons',
-    initialState,
-    reducers: {
-        addMissingPerson: (state, action) => {
-            state.missingPersons.push(action.payload);
-        },
-        updateMissingPerson: (state, action) => {
-            const index = state.missingPersons.findIndex(person => person.id === action.payload.id);
-            if (index !== -1) {
-                state.missingPersons[index] = action.payload;
-            }
-        },
-        removeMissingPerson: (state, action) => {
-            state.missingPersons = state.missingPersons.filter(person => person.id !== action.payload.id);
-        },
+    name: 'profiles',
+    initialState: {
+        profiles: [],
+        isLoading: false,
+        error: null,
     },
+    reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(fetchMissingPersons.pending, (state) => {
-                state.loading = true;
-                state.error = null;
+            .addCase(fetchProfiles.pending, (state) => {
+                state.isLoading = true;
             })
-            .addCase(fetchMissingPersons.fulfilled, (state, action) => {
-                state.loading = false;
-                state.missingPersons = action.payload;
+            .addCase(fetchProfiles.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.profiles = action.payload;
             })
-            .addCase(fetchMissingPersons.rejected, (state, action) => {
-                state.loading = false;
+            .addCase(fetchProfiles.rejected, (state, action) => {
+                state.isLoading = false;
                 state.error = action.error.message;
             });
     },
 });
 
-export const { addMissingPerson, updateMissingPerson, removeMissingPerson } = missingPersonsSlice.actions;
-
 export default missingPersonsSlice.reducer;
+
+
