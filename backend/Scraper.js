@@ -10,33 +10,21 @@ function formatDate(dateString) {
 
 export async function scrape(limit) {
     const connection = await mysql.createConnection({
-        host: 'localhost',
+        host: '127.0.0.1',
         user: 'root',
         password: 'data',
         database: 'missing_person_db',
         port: 3307
     });
 
-    const browser = await puppeteer.launch({ headless: false }); // Set headless to false to see the browser actions
+    const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
 
     try {
         console.log('Scraper is running...');
 
-        await page.goto('http://missingpersons.dps.state.nm.us/mpweb/mpcity.html', { waitUntil: 'networkidle2' });
-        console.log('Navigated to the city search page');
-
-        await page.waitForSelector('form[name="form3"]');
-        console.log('City search form found');
-
-        await page.type('input[name="city_txt"]', 'FARMINGTON');
-        console.log('Entered FARMINGTON in the city input field');
-
-        await Promise.all([
-            page.waitForNavigation({ waitUntil: 'networkidle2' }),
-            page.click('input[type="submit"]')
-        ]);
-        console.log('Form submitted');
+        await page.goto('http://missingpersons.dps.state.nm.us/mpweb/mpstate_serv', { waitUntil: 'networkidle2' });
+        console.log('Navigated to the state page');
 
         await page.waitForSelector('table[border="1"]', { timeout: 90000 });
         console.log('Results table found');
@@ -46,63 +34,65 @@ export async function scrape(limit) {
 
         const results = [];
         for (let link of links.slice(0, limit)) {
-            await page.goto(link, { waitUntil: 'networkidle2' });
-            console.log('Navigated to detail page:', link);
+            try {
+                await page.goto(link, { waitUntil: 'networkidle2' });
+                console.log('Navigated to detail page:', link);
 
-            const detail = await page.evaluate(() => {
-                const getTextByLabel = (label) => {
-                    const td = Array.from(document.querySelectorAll('td')).find(td => td.textContent.trim() === label);
-                    return td ? td.nextElementSibling.textContent.trim() : null;
-                };
+                const detail = await page.evaluate(() => {
+                    const getTextByLabel = (label) => {
+                        const td = Array.from(document.querySelectorAll('td')).find(td => td.textContent.trim() === label);
+                        return td ? td.nextElementSibling.textContent.trim() : null;
+                    };
 
-                const nameDetails = document.querySelector('div#MPImgTxt')?.innerText.trim() || '';
-                const [nameDetailsDate, name] = nameDetails.split(' - ');
+                    const nameDetails = document.querySelector('div#MPImgTxt')?.innerText.trim() || '';
+                    const [nameDetailsDate, name] = nameDetails.split(' - ');
 
-                // Attempting to extract the image URL correctly
-                const photoElement = document.querySelector('img');
-                let photoUrl = null;
-                if (photoElement && photoElement.src.includes('image_serv?id=')) {
-                    const photoId = photoElement.src.split('id=')[1];
-                    photoUrl = `http://missingpersons.dps.state.nm.us/mpweb/image_serv?id=${photoId}`;
+                    const photoElement = document.querySelector('img');
+                    let photoUrl = null;
+                    if (photoElement && photoElement.src.includes('image_serv?id=')) {
+                        const photoId = photoElement.src.split('id=')[1];
+                        photoUrl = `http://missingpersons.dps.state.nm.us/mpweb/image_serv?id=${photoId}`;
+                    }
+
+                    return {
+                        name: name || '',
+                        missingDate: getTextByLabel('Date Missing:'),
+                        missingFrom: getTextByLabel('Missing from:'),
+                        ageThen: getTextByLabel('Age Then:'),
+                        ageNow: getTextByLabel('Age Now:'),
+                        description: document.querySelector('td[colspan="5"]')?.innerText.trim() || '',
+                        dob: getTextByLabel('Date of Birth:'),
+                        sex: getTextByLabel('Sex:'),
+                        eyeColor: getTextByLabel('Eye Color:'),
+                        height: getTextByLabel('Height:'),
+                        weight: parseFloat(getTextByLabel('Weight:')),
+                        hairColor: getTextByLabel('Hair Color:'),
+                        race: getTextByLabel('Race:'),
+                        photo1: photoUrl
+                    };
+                });
+
+                if (!detail.photo1) {
+                    const imgElement = await page.$('img');
+                    if (imgElement) {
+                        await imgElement.click();
+                        await page.waitForNavigation({ waitUntil: 'networkidle2' });
+                        detail.photo1 = await page.evaluate(() => {
+                            const photoElement = document.querySelector('img');
+                            return photoElement ? photoElement.src : null;
+                        });
+                    }
                 }
 
-                return {
-                    name: name || '',
-                    missingDate: getTextByLabel('Date Missing:'),
-                    missingFrom: getTextByLabel('Missing from:'),
-                    ageThen: getTextByLabel('Age Then:'),
-                    ageNow: getTextByLabel('Age Now:'),
-                    description: document.querySelector('td[colspan="5"]')?.innerText.trim() || '',
-                    dob: getTextByLabel('Date of Birth:'),
-                    sex: getTextByLabel('Sex:'),
-                    eyeColor: getTextByLabel('Eye Color:'),
-                    height: getTextByLabel('Height:'),
-                    weight: parseFloat(getTextByLabel('Weight:')),
-                    hairColor: getTextByLabel('Hair Color:'),
-                    race: getTextByLabel('Race:'),
-                    photo1: photoUrl
-                };
-            });
+                console.log('Scraped detail:', detail);
 
-            // If the photoUrl is null, try to click the image to get the correct URL
-            if (!detail.photo1) {
-                const imgElement = await page.$('img');
-                if (imgElement) {
-                    await imgElement.click();
-                    await page.waitForNavigation({ waitUntil: 'networkidle2' });
-                    detail.photo1 = await page.evaluate(() => {
-                        const photoElement = document.querySelector('img');
-                        return photoElement ? photoElement.src : null;
-                    });
+                if (detail.race && detail.race.toLowerCase() === 'american indian/alaskan native') {
+                    results.push(detail);
+                } else {
+                    console.log('Skipped profile without the specified race:', detail.name);
                 }
-            }
-
-            console.log('Scraped detail:', detail);
-
-            if (detail.race && detail.race.toLowerCase() !== 'unknown') {
-                results.push(detail);
-            } else {
-                console.log('Skipped profile without tribe affiliation:', detail.name);
+            } catch (pageError) {
+                console.error('Error navigating to detail page:', link, pageError);
             }
         }
 
@@ -115,4 +105,3 @@ export async function scrape(limit) {
         await connection.end();
     }
 }
-
