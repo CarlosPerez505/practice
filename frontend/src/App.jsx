@@ -9,6 +9,9 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import PredictionComponent from './components/SearchCases/PredictionComponent';
 
+
+
+
 function App() {
     return (
         <div className="bg-gray-900 text-white min-h-screen">

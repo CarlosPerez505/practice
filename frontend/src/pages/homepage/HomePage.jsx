@@ -1,32 +1,30 @@
-// src/pages/HomePage.jsx
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useProfile } from '../../context/ProfileContext';
 import Map from "../../components/map/Map.jsx";
-import Carousel from '../../components/carousel/Carousel.jsx';
+
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Hero from "../../components/Hero.jsx";
 import ProfilesList from "../../components/ProfileList.jsx";
 import LoadingScreen from "./../../components/loadingScreen.jsx";
 import ProfileDetails from '../../components/ProfileDetails.jsx';
-import { setSelectedProfile, clearSelectedProfile } from '../../redux/slices/selectedProfileSlice';
 import About from "../../components/About.jsx";
 import MMIPChart from "../../components/MMIPChart.jsx";
 import MoreStatistics from "../../components/MoreStatistics.jsx";
 import Contact from "../../components/Contact.jsx";
-import TranslateToNavajo from '../../components/TranslateToNavajo';
 
 function HomePage() {
+    const [women, setWomen] = useState([]);
     const [profiles, setProfiles] = useState([]);
+    const [results, setResults] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const selectedProfile = useSelector(state => state.selectedProfile);
-    const dispatch = useDispatch();
+    const { selectedProfile, setSelectedProfile, clearSelectedProfile } = useProfile();
 
     const fetchData = async () => {
         try {
-            const response = await fetch('http://10.0.0.163:5000/api/missingCases');
+            const response = await fetch('/scrape');
             const data = await response.json();
-            setProfiles(data);
+            setResults(data);
         } catch (error) {
             console.error('Fetch error:', error);
         } finally {
@@ -35,22 +33,37 @@ function HomePage() {
     };
 
     useEffect(() => {
-        fetchData();
+        console.log('Fetching data...');
+        fetch('http://10.0.0.163:5000/api/missingCases')
+            .then(response => {
+                console.log('Response received:', response);
+                return response.json();
+            })
+            .then(data => {
+                console.log('Data fetched:', data);
+                setProfiles(data);
+            })
+            .catch(error => console.error('Error fetching data:', error))
+            .finally(() => {
+                console.log('Fetch complete');
+                setIsLoading(false);
+            });
     }, []);
 
+    useEffect(() => {
+        console.log('Selected profile:', selectedProfile);
+    }, [selectedProfile]);
+
     const handleProfileClick = (profile) => {
-        dispatch(setSelectedProfile(profile));
+        setSelectedProfile(profile);
     };
 
     if (isLoading) {
+        console.log('Loading...');
         return <LoadingScreen />;
     }
 
-    const textContents = {
-        Hero: "Empowering Communities to Find the Missing Through the Power of Modern Data Collection and Web Technologies.",
-        About: "The Red Palm Project is an innovative and dedicated initiative aimed at raising awareness and providing comprehensive information about missing Indigenous people, particularly in the Southwest region.",
-        Map: "Interactive Mapping: Integrated with Mapbox, the application provides a visual representation of missing persons' last known locations, enhancing the search and awareness efforts."
-    };
+    console.log('Rendering HomePage with profiles:', profiles);
 
     return (
         <div className="Homepage bg-gradient-to-br from-gradient-start via-gradient-middle to-gradient-end min-h-screen">
@@ -70,16 +83,13 @@ function HomePage() {
                     <h1 className="text-3xl font-bold text-center my-4 text-white">Missing Persons Profiles</h1>
                     <ProfilesList profiles={profiles} onProfileClick={handleProfileClick} />
                     {selectedProfile && (
-                        <ProfileDetails profile={selectedProfile} onClose={() => dispatch(clearSelectedProfile())} />
+                        <ProfileDetails profile={selectedProfile} onClose={clearSelectedProfile} />
                     )}
                 </div>
                 <Contact/>
             </div>
-            <TranslateToNavajo texts={textContents} />
         </div>
     );
 }
 
 export default HomePage;
-
-

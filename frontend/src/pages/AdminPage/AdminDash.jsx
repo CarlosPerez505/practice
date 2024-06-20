@@ -1,17 +1,15 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import { Link, Outlet } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { closeSidebar, toggleSidebar } from '../../redux/slices/sideBarSlice';
+import { useSidebar } from '../../context/SidebarContext';
 
 const AdminDash = () => {
-    const isSidebarOpen = useSelector((state) => state.sidebar.isOpen);
-    const dispatch = useDispatch();
+    const { isOpen, openSidebar, closeSidebar, toggleSidebar } = useSidebar();
     const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
     const handleLinkClick = () => {
         if (window.innerWidth <= 768) { // Only close sidebar on small screens
             setIsMobileSidebarOpen(false);
-            dispatch(closeSidebar());
+            closeSidebar();
         }
     };
 
@@ -63,4 +61,3 @@ const AdminDash = () => {
 };
 
 export default AdminDash;
-
