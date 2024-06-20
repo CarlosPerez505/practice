@@ -1,14 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
 
 const ProfileDetails = ({ profile, onClose }) => {
+    const [isLoading, setIsLoading] = useState(true);
+
     if (!profile) {
         return null;
     }
 
+    const handleImageLoad = () => {
+        console.log('Image loaded');
+        setIsLoading(false);
+    };
+
+    const handleImageError = () => {
+        console.error('Error loading image');
+        setIsLoading(false);
+    };
+
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
-            <div className="bg-gray-800 w-full h-full md:w-4/5 md:h-4/5 lg:w-3/5 lg:h-3/5 p-8 overflow-auto relative rounded-xl shadow-lg">
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4 md:p-8">
+            <div className="bg-gray-800 w-full md:w-4/5 lg:w-3/5 h-auto md:h-4/5 p-4 md:p-8 overflow-auto relative rounded-xl shadow-lg">
                 <button
                     onClick={onClose}
                     className="absolute top-4 right-4 text-gray-400 hover:text-gray-100 transition duration-200 bg-gray-700 rounded-full p-2 shadow-lg"
@@ -16,15 +28,22 @@ const ProfileDetails = ({ profile, onClose }) => {
                     <FaTimes size={20} />
                 </button>
                 <div className="text-center">
-                    <h1 className="text-4xl font-bold mb-4 text-white">{profile.name}</h1>
+                    <h1 className="text-2xl md:text-4xl font-bold mb-4 text-white">{profile.name}</h1>
                     {profile.photo1 ? (
-                        <img
-                            src={profile.photo1}
-                            alt="Profile"
-                            className="mt-4 w-48 h-48 object-cover rounded-full mx-auto shadow-lg mb-4"
-                        />
+                        <div className="relative w-32 h-32 md:w-48 md:h-48 mx-auto mb-4">
+                            {isLoading && (
+                                <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4 md:h-16 md:w-16 mx-auto"></div>
+                            )}
+                            <img
+                                src={profile.photo1}
+                                alt="Profile"
+                                className={`object-cover rounded-full shadow-lg ${isLoading ? 'hidden' : 'block'}`}
+                                onLoad={handleImageLoad}
+                                onError={handleImageError}
+                            />
+                        </div>
                     ) : (
-                        <div className="w-48 h-48 bg-gray-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+                        <div className="w-32 h-32 md:w-48 md:h-48 bg-gray-500 rounded-full mx-auto mb-4 flex items-center justify-center">
                             <span className="text-gray-200">No Image</span>
                         </div>
                     )}

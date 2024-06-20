@@ -1,6 +1,6 @@
 // server.js
 import express from 'express';
-import mysql from 'mysql2';
+import mysql from 'mysql2/promise';
 import cors from 'cors';
 import morgan from 'morgan';
 import path from 'path';
@@ -8,27 +8,16 @@ import { fileURLToPath } from 'url';
 
 const app = express();
 
-// Hardcoded API key
-const openAiApiKey = 'sk-proj-JN19JBhslnLyt3o54L0ST3BlbkFJgv8OF65XaxVCyOu4ToXc';
-
-console.log(`Your OpenAI API key is: ${openAiApiKey}`); // For testing purposes
-
-// Initialize MySQL connection
-const db = mysql.createConnection({
-    host: '127.0.0.1',  // Use '127.0.0.1' to avoid issues with IPv6
+// Initialize MySQL connection pool
+const pool = mysql.createPool({
+    host: '127.0.0.1',
     user: 'root',
     password: 'data',
     database: 'missing_person_db',
-    port: 3307  // Ensure this port is correct
-});
-
-// Attempt to connect to the MySQL database
-db.connect((err) => {
-    if (err) {
-        console.error('Error connecting to the database:', err);
-        return;
-    }
-    console.log('Connected to the database.');
+    port: 3307,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
 });
 
 const PORT = 5000; // Ensure this is defined before use
@@ -55,25 +44,8 @@ app.use((req, res, next) => {
     next();
 });
 
-// Define your endpoints
-app.get('/api/scrape', async (req, res) => {
-    const limit = parseInt(req.query.limit, 10) || 5;
-
-    console.log(`Scrape endpoint called with limit: ${limit}`);
-
-    try {
-        console.log('Starting scraper...');
-        await scraper(limit);
-        console.log('Scraper finished successfully');
-        res.status(200).send('Scraper finished successfully');
-    } catch (error) {
-        console.error('Scraping error:', error);
-        res.status(500).send('Scraping error');
-    }
-});
-
 // API endpoints for managing missing cases
-app.get('/api/missingCases/search', (req, res) => {
+app.get('/api/missingCases/search', async (req, res) => {
     const searchTerm = req.query.term;
     if (!searchTerm) {
         return res.status(400).json({ error: 'Search term is required' });
@@ -82,57 +54,57 @@ app.get('/api/missingCases/search', (req, res) => {
     const formattedSearchTerm = `%${searchTerm}%`;
     const query = 'SELECT * FROM missingCases WHERE LOWER(name) LIKE LOWER(?)';
 
-    db.query(query, [formattedSearchTerm], (err, results) => {
-        if (err) {
-            console.error('Error searching in database:', err);
-            return res.status(500).json({ error: 'Error during search' });
-        }
+    try {
+        const [results] = await pool.query(query, [formattedSearchTerm]);
         res.json(results);
-    });
+    } catch (err) {
+        console.error('Error searching in database:', err);
+        res.status(500).json({ error: 'Error during search' });
+    }
 });
 
-app.post('/api/missingCases', (req, res) => {
+app.post('/api/missingCases', async (req, res) => {
     const { name, age, lastSeenDate, lastSeenLocation, description, reportedDate = new Date() } = req.body;
     const query = 'INSERT INTO missingCases (name, age, lastSeenDate, lastSeenLocation, description, reportedDate) VALUES (?, ?, ?, ?, ?, ?)';
 
-    db.query(query, [name, age, lastSeenDate, lastSeenLocation, description, reportedDate], (err, result) => {
-        if (err) {
-            console.error('Error adding to database:', err);
-            return res.status(500).json({ error: 'Failed to add to the database' });
-        }
+    try {
+        const [result] = await pool.query(query, [name, age, lastSeenDate, lastSeenLocation, description, reportedDate]);
         res.status(201).json({ message: 'Entry added successfully', id: result.insertId });
-    });
+    } catch (err) {
+        console.error('Error adding to database:', err);
+        res.status(500).json({ error: 'Failed to add to the database' });
+    }
 });
 
-app.get('/api/missingCases', (req, res) => {
+app.get('/api/missingCases', async (req, res) => {
     const query = 'SELECT * FROM missingCases';
 
-    db.query(query, (err, results) => {
-        if (err) {
-            console.error('Error fetching from database:', err);
-            return res.status(500).json({ error: 'Failed to fetch data' });
-        }
+    try {
+        const [results] = await pool.query(query);
         res.json(results);
-    });
+    } catch (err) {
+        console.error('Error fetching from database:', err);
+        res.status(500).json({ error: 'Failed to fetch data' });
+    }
 });
 
-app.get('/api/missingCases/:id', (req, res) => {
+app.get('/api/missingCases/:id', async (req, res) => {
     const { id } = req.params;
     const query = 'SELECT * FROM missingCases WHERE id = ?';
 
-    db.query(query, [id], (err, results) => {
-        if (err) {
-            console.error('Error fetching from database:', err);
-            return res.status(500).json({ error: 'Failed to fetch data' });
-        }
+    try {
+        const [results] = await pool.query(query, [id]);
         if (results.length === 0) {
             return res.status(404).json({ error: 'Entry not found' });
         }
         res.json(results[0]);
-    });
+    } catch (err) {
+        console.error('Error fetching from database:', err);
+        res.status(500).json({ error: 'Failed to fetch data' });
+    }
 });
 
-app.patch('/api/missingCases/:id', (req, res) => {
+app.patch('/api/missingCases/:id', async (req, res) => {
     const { id } = req.params;
     const updateFields = req.body;
 
@@ -145,32 +117,32 @@ app.patch('/api/missingCases/:id', (req, res) => {
 
     const query = `UPDATE missingCases SET ${setClause} WHERE id = ?`;
 
-    db.query(query, queryParams, (err, result) => {
-        if (err) {
-            console.error('Error updating database:', err);
-            return res.status(500).json({ error: 'Failed to update the database' });
-        }
+    try {
+        const [result] = await pool.query(query, queryParams);
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'No such case found' });
         }
         res.status(200).json({ message: 'Entry updated successfully' });
-    });
+    } catch (err) {
+        console.error('Error updating database:', err);
+        res.status(500).json({ error: 'Failed to update the database' });
+    }
 });
 
-app.delete('/api/missingCases/:id', (req, res) => {
+app.delete('/api/missingCases/:id', async (req, res) => {
     const { id } = req.params;
     const query = 'DELETE FROM missingCases WHERE id = ?';
 
-    db.query(query, [id], (err, result) => {
-        if (err) {
-            console.error('Error deleting from database:', err);
-            return res.status(500).json({ error: 'Failed to delete the entry' });
-        }
+    try {
+        const [result] = await pool.query(query, [id]);
         if (result.affectedRows === 0) {
             return res.status(404).json({ error: 'Entry not found' });
         }
         res.json({ message: 'Entry deleted successfully' });
-    });
+    } catch (err) {
+        console.error('Error deleting from database:', err);
+        res.status(500).json({ error: 'Failed to delete the entry' });
+    }
 });
 
 // Temporary endpoint
