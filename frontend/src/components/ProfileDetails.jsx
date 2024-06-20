@@ -1,22 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { FaTimes } from 'react-icons/fa';
 
 const ProfileDetails = ({ profile, onClose }) => {
-    const [isLoading, setIsLoading] = useState(true);
-
     if (!profile) {
         return null;
     }
-
-    const handleImageLoad = () => {
-        console.log('Image loaded');
-        setIsLoading(false);
-    };
-
-    const handleImageError = () => {
-        console.error('Error loading image');
-        setIsLoading(false);
-    };
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4 md:p-8">
@@ -31,15 +19,10 @@ const ProfileDetails = ({ profile, onClose }) => {
                     <h1 className="text-2xl md:text-4xl font-bold mb-4 text-white">{profile.name}</h1>
                     {profile.photo1 ? (
                         <div className="relative w-32 h-32 md:w-48 md:h-48 mx-auto mb-4">
-                            {isLoading && (
-                                <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4 md:h-16 md:w-16 mx-auto"></div>
-                            )}
                             <img
                                 src={profile.photo1}
                                 alt="Profile"
-                                className={`object-cover rounded-full shadow-lg ${isLoading ? 'hidden' : 'block'}`}
-                                onLoad={handleImageLoad}
-                                onError={handleImageError}
+                                className="object-cover rounded-full shadow-lg"
                             />
                         </div>
                     ) : (
@@ -73,4 +56,6 @@ const ProfileDetails = ({ profile, onClose }) => {
 };
 
 export default ProfileDetails;
+
+
 

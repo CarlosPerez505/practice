@@ -1,7 +1,7 @@
 // src/utils/translateService.js
 import axios from 'axios';
 
-const OPENAI_API_KEY = 'sk-proj-JN19JBhslnLyt3o54L0ST3BlbkFJgv8OF65XaxVCyOu4ToXc';
+const OPENAI_API_KEY = '';
 
 export const translateText = async (text) => {
     try {

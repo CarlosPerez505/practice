@@ -12,6 +12,7 @@ import MMIPChart from "../../components/MMIPChart.jsx";
 import MoreStatistics from "../../components/MoreStatistics.jsx";
 import Contact from "../../components/Contact.jsx";
 import AnimatedCanvas from "../../components/NeuralNetworkVisualization.jsx";
+import MapPredictions from "../../components/MapPredictions.jsx";
 
 function HomePage() {
     const [profiles, setProfiles] = useState([]);
@@ -53,10 +54,6 @@ function HomePage() {
         setSelectedProfile(profile);
     };
 
-    if (isLoading) {
-        return <AnimatedCanvas />;
-    }
-
     return (
         <div className="Homepage bg-gradient-to-br from-gradient-start via-gradient-middle to-gradient-end min-h-screen">
             <Hero />
@@ -67,6 +64,7 @@ function HomePage() {
             </div>
             <div id="map" className="container mx-auto p-4">
                 <Map />
+                <MapPredictions/>
                 <header className="App-header my-8 text-center">
                     <h1 id="profiles" className="text-4xl font-bold text-white">Missing People</h1>
                 </header>
