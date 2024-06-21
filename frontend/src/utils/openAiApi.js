@@ -1,21 +1,23 @@
-// src/utils/openAiApi.js
-export const fetchOpenAiPrediction = async (lat, lng, apiKey) => {
-    const response = await fetch('https://api.openai.com/v1/engines/davinci-codex/completions', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-            prompt: `Given the latitude ${lat} and longitude ${lng}, predict the next possible location.`,
-            max_tokens: 50
-        })
-    });
+// utils/openAiApi.js
+import axios from 'axios';
 
-    if (!response.ok) {
-        throw new Error(`OpenAI API error: ${response.statusText}`);
+export const fetchOpenAiPrediction = async (latitude, longitude) => {
+    const apiKey = import.meta.env.VITE_OPENAI_API_KEY; // Ensure your API key is stored in a .env file
+
+    const data = {
+        prompt: `Predict the next location based on latitude: ${latitude} and longitude: ${longitude}.`,
+        max_tokens: 100,
+    };
+
+    try {
+        const response = await axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', data, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`,
+            },
+        });
+        return response.data.choices[0].text.trim();
+    } catch (error) {
+        throw new Error('Failed to fetch prediction from OpenAI');
     }
-
-    const data = await response.json();
-    return data.choices[0].text.trim();
 };

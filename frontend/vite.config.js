@@ -1,4 +1,3 @@
-// vite.config.js
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import viteCompression from 'vite-plugin-compression';
@@ -24,7 +23,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     minify: 'terser',
-    sourcemap: true, // Enable source maps
+    sourcemap: true,
     terserOptions: {
       compress: {
         drop_console: true,

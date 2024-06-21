@@ -5,14 +5,11 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Hero from "../../components/Hero.jsx";
 import ProfilesList from "../../components/ProfileList.jsx";
-import LoadingScreen from "../../components/loadingScreen.jsx";
 import ProfileDetails from '../../components/ProfileDetails.jsx';
 import About from "../../components/About.jsx";
 import MMIPChart from "../../components/MMIPChart.jsx";
 import MoreStatistics from "../../components/MoreStatistics.jsx";
 import Contact from "../../components/Contact.jsx";
-import AnimatedCanvas from "../../components/NeuralNetworkVisualization.jsx";
-import MapPredictions from "../../components/MapPredictions.jsx";
 
 function HomePage() {
     const [profiles, setProfiles] = useState([]);
@@ -64,7 +61,7 @@ function HomePage() {
             </div>
             <div id="map" className="container mx-auto p-4">
                 <Map />
-                <MapPredictions/>
+
                 <header className="App-header my-8 text-center">
                     <h1 id="profiles" className="text-4xl font-bold text-white">Missing People</h1>
                 </header>
@@ -87,3 +84,4 @@ function HomePage() {
 }
 
 export default HomePage;
+

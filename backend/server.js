@@ -1,28 +1,39 @@
-// server.js
 import express from 'express';
 import mysql from 'mysql2/promise';
 import cors from 'cors';
 import morgan from 'morgan';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+
+dotenv.config(); // Load environment variables from .env file
 
 const app = express();
 
 // Initialize MySQL connection pool
 const pool = mysql.createPool({
-    host: '127.0.0.1',
-    user: 'root',
-    password: 'data',
-    database: 'missing_person_db',
-    port: 3307,
+    host: process.env.DB_HOST || '127.0.0.1',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || 'data',
+    database: process.env.DB_NAME || 'missing_person_db',
+    port: process.env.DB_PORT || 3307,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
 });
 
-const PORT = 5000; // Ensure this is defined before use
+// Test the database connection
+pool.getConnection()
+    .then(connection => {
+        console.log('Connected to the database.');
+        connection.release();
+    })
+    .catch(err => {
+        console.error('Error connecting to the database:', err);
+    });
 
-// Update the allowed origins to include localhost and your network IP
+const PORT = process.env.PORT || 5000;
+
 const allowedOrigins = ['http://10.0.0.163:5173', 'http://localhost:5173', 'http://172.18.32.1:5173'];
 app.use(cors({
     origin: (origin, callback) => {
@@ -32,16 +43,32 @@ app.use(cors({
             callback(new Error('Not allowed by CORS'));
         }
     },
-    credentials: true // Allow credentials (cookies, authorization headers, etc.)
+    credentials: true
 }));
 
-app.use(express.json()); // Middleware to parse JSON request bodies
+app.use(express.json());
 app.use(morgan('dev'));
 
-// This will log every request that comes into your server/middleware.
 app.use((req, res, next) => {
     console.log(`Received ${req.method} request for '${req.url}'`);
     next();
+});
+
+// Define your endpoints
+app.get('/api/scrape', async (req, res) => {
+    const limit = parseInt(req.query.limit, 10) || 5;
+
+    console.log(`Scrape endpoint called with limit: ${limit}`);
+
+    try {
+        console.log('Starting scraper...');
+        await scraper(limit);
+        console.log('Scraper finished successfully');
+        res.status(200).send('Scraper finished successfully');
+    } catch (error) {
+        console.error('Scraping error:', error);
+        res.status(500).send('Scraping error');
+    }
 });
 
 // API endpoints for managing missing cases

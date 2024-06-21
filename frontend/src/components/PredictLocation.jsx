@@ -1,4 +1,3 @@
-// src/components/PredictLocation.jsx
 import React, { useState } from 'react';
 import { fetchOpenAiPrediction } from '../utils/openAiApi';
 
@@ -9,13 +8,11 @@ const PredictLocation = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const apiKey = 'your-openai-api-key'; // Replace with your actual OpenAI API key
-
     const handlePrediction = async () => {
         setLoading(true);
         setError(null);
         try {
-            const result = await fetchOpenAiPrediction(parseFloat(latitude), parseFloat(longitude), apiKey);
+            const result = await fetchOpenAiPrediction(parseFloat(latitude), parseFloat(longitude));
             setPrediction(result);
         } catch (err) {
             setError(err.message);
@@ -53,11 +50,9 @@ const PredictLocation = () => {
                 <div className="text-center mt-4">
                     <p className="text-lg">Predicted Next Location: <span className="font-semibold">{prediction}</span></p>
                 </div>
-
-
             )}
         </div>
     );
 };
 
-export default PredictLocation;
+export default PredictLocat

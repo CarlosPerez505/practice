@@ -3,8 +3,8 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './Map.css';
 
-// Your Mapbox access token
-mapboxgl.accessToken = 'pk.eyJ1IjoibWFwbWFrZXI0MjAiLCJhIjoiY2x0ODI0and6MHMxczJpbWdldmQ3cWJoMSJ9.e6Cg-_7k-Spy_F5yV0zu0Q';
+const mapboxApiKey = import.meta.env.VITE_MAPBOX_API_KEY;
+console.log('Mapbox API Key:', mapboxApiKey);
 
 const Map = () => {
     const mapContainer = useRef(null);
@@ -13,6 +13,12 @@ const Map = () => {
 
     useEffect(() => {
         if (map) return;
+        if (!mapboxApiKey) {
+            console.error("Mapbox API key is missing");
+            return;
+        }
+
+        mapboxgl.accessToken = mapboxApiKey;
 
         const mapInstance = new mapboxgl.Map({
             container: mapContainer.current,
@@ -132,3 +138,5 @@ const Map = () => {
 };
 
 export default Map;
+
+
