@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Link as ScrollLink } from 'react-scroll';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const location = useLocation();
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
@@ -12,6 +13,11 @@ const Navbar = () => {
     const closeMenu = () => {
         setIsOpen(false);
     };
+
+    // Hide navbar on admin routes
+    if (location.pathname.startsWith('/admin')) {
+        return null;
+    }
 
     return (
         <nav className="bg-transparent text-white p-4 shadow-lg">

@@ -1,21 +1,19 @@
-// src/pages/context/SidebarContext.jsx
-import React, { createContext, useState, useEffect } from 'react';
+// src/context/SidebarContext.jsx
+import React, { createContext, useContext, useState } from 'react';
 
-export const SidebarContext = createContext();
+const SidebarContext = createContext();
+
+export const useSidebar = () => useContext(SidebarContext);
 
 export const SidebarProvider = ({ children }) => {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
 
-    useEffect(() => {
-        console.log('SidebarContext initialized');
-    }, []);
-
-    useEffect(() => {
-        console.log('Sidebar state changed:', isSidebarOpen);
-    }, [isSidebarOpen]);
+    const openSidebar = () => setIsOpen(true);
+    const closeSidebar = () => setIsOpen(false);
+    const toggleSidebar = () => setIsOpen(!isOpen);
 
     return (
-        <SidebarContext.Provider value={{ isSidebarOpen, setIsSidebarOpen }}>
+        <SidebarContext.Provider value={{ isOpen, openSidebar, closeSidebar, toggleSidebar }}>
             {children}
         </SidebarContext.Provider>
     );

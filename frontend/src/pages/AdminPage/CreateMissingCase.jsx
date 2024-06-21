@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import SearchCases from "../../components/SearchCases/SearchCases.jsx";
+import SearchCases from "./SearchCases.jsx";
 
 function CreateMissingCase() {
     const [formData, setFormData] = useState({

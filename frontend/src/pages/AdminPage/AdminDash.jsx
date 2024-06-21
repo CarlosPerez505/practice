@@ -1,14 +1,15 @@
-import React, {useState} from 'react';
+// src/pages/AdminPage/AdminDash.jsx
+import React, { useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import { useSidebar } from '../../context/SidebarContext';
 
 const AdminDash = () => {
     const { isOpen, openSidebar, closeSidebar, toggleSidebar } = useSidebar();
-    const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+    const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(true); // Changed to true to keep it open
 
     const handleLinkClick = () => {
-        if (window.innerWidth <= 768) { // Only close sidebar on small screens
-            setIsMobileSidebarOpen(false);
+        if (window.innerWidth <= 768) {
+            setIsMobileSidebarOpen(true); // Keep it open
             closeSidebar();
         }
     };
@@ -19,7 +20,6 @@ const AdminDash = () => {
 
     return (
         <div className="flex h-screen bg-gray-900 text-white">
-            {/* Sidebar */}
             <aside className={`fixed z-30 inset-y-0 left-0 w-64 transition-transform transform bg-gray-800 text-white ${isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0 shadow-lg`}>
                 <div className="p-4 text-center text-xl font-bold border-b border-gray-700">
                     Admin Dashboard
@@ -42,17 +42,13 @@ const AdminDash = () => {
                 </nav>
             </aside>
 
-            {/* Main content */}
             <div className="flex-1 flex flex-col">
                 <div className="md:hidden p-4 bg-gray-800">
-                    <button
-                        className="text-white"
-                        onClick={toggleMobileSidebar}
-                    >
+                    <button className="text-white" onClick={toggleMobileSidebar}>
                         {isMobileSidebarOpen ? 'Close Menu' : 'Open Menu'}
                     </button>
                 </div>
-                <main className="flex-1 p-4 bg-white shadow-lg rounded-lg">
+                <main className="flex-1 p-4 bg-gray-900 text-white shadow-lg rounded-lg">
                     <Outlet />
                 </main>
             </div>

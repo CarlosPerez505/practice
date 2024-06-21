@@ -39,7 +39,6 @@ const UpdateForm = () => {
                         lastSeenDate: formatDate(data.lastSeenDate),
                         reportedDate: formatDate(data.reportedDate),
                         dateOfBirth: formatDate(data.dateOfBirth),
-                        temp_dateOfBirth: formatDate(data.temp_dateOfBirth)
                     };
                     setInitialValues(formattedData);
                 })

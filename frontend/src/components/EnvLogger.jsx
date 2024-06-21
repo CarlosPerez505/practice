@@ -1,10 +1,9 @@
 import React from 'react';
 
-function EnvLogger() {
+const EnvLogger = () => {
     console.log('VITE_MAPBOX_API_KEY:', import.meta.env.VITE_MAPBOX_API_KEY);
     console.log('VITE_OPENAI_API_KEY:', import.meta.env.VITE_OPENAI_API_KEY);
-    console.log("Logger working")
-
+    console.log("Logger working");
 
     return (
         <div>
@@ -14,3 +13,4 @@ function EnvLogger() {
 }
 
 export default EnvLogger;
+

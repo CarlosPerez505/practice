@@ -41,12 +41,12 @@ function SearchCases({ onSelectCase }) {
     return (
         <div className="flex justify-center text-gray-900">
             <div className="mt-14 w-full max-w-3xl px-4">
-                <p className="mb-4 text-lg text-gray-700">
+                <p className="mb-4 text-lg text-gray-200">
                     Search cases in the database or create a new case below
                 </p>
                 <div className="flex flex-col sm:flex-row items-center mb-4 space-y-4 sm:space-y-0 sm:space-x-4 text-gray-900">
                     <input
-                        className="flex-grow w-full sm:flex-grow-0 p-3 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                        className="flex-grow w-full sm:flex-grow-0 p-3 border border-gray-600 rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                         type="text"
                         value={searchTerm}
                         onChange={handleSearchChange}
@@ -68,10 +68,10 @@ function SearchCases({ onSelectCase }) {
                         {cases.map((caseItem) => (
                             <li
                                 key={caseItem.id}
-                                className="p-4 border rounded-lg bg-slate-800 hover:bg-slate-700 text-white flex justify-between items-center"
+                                className="p-4 border border-gray-600 rounded-lg bg-gray-800 hover:bg-gray-700 text-white flex justify-between items-center"
                                 onClick={() => onSelectCase(caseItem)}
                             >
-                                <div className="text-gray-800">
+                                <div className="text-gray-300">
                                     <p className="font-semibold text-lg">{caseItem.name} - {caseItem.age}</p>
                                     <p>{caseItem.lastSeenDate} - {caseItem.lastSeenLocation}</p>
                                     <p>{caseItem.description}</p>
