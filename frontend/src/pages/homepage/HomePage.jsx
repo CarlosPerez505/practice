@@ -21,7 +21,7 @@ function HomePage() {
 
     const fetchData = async () => {
         try {
-            const response = await fetch('http://10.0.0.163:5000/api/missingCases');
+            const response = await fetch('http://localhost:5000/api/missingCases');
 
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);

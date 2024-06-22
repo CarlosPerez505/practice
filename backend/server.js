@@ -10,17 +10,19 @@ dotenv.config(); // Load environment variables from .env file
 
 const app = express();
 
-// Initialize MySQL connection pool
+
+
 const pool = mysql.createPool({
     host: process.env.DB_HOST || '127.0.0.1',
     user: process.env.DB_USER || 'root',
     password: process.env.DB_PASSWORD || 'data',
     database: process.env.DB_NAME || 'missing_person_db',
-    port: process.env.DB_PORT || 3307,
+    port: process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : 3306,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
 });
+
 
 // Test the database connection
 pool.getConnection()
@@ -34,7 +36,7 @@ pool.getConnection()
 
 const PORT = process.env.PORT || 5000;
 
-const allowedOrigins = ['http://10.0.0.163:5173', 'http://localhost:5173', 'http://172.18.32.1:5173'];
+const allowedOrigins = ['http://10.0.0.253:5173', 'http://localhost:5000', 'http://172.18.32.1:5173'];
 app.use(cors({
     origin: (origin, callback) => {
         if (!origin || allowedOrigins.includes(origin)) {
