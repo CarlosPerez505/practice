@@ -63,8 +63,7 @@ export async function scrape(limit = 300) {
         // Retry failed links
         if (failedLinks.length > 0) {
             console.log('Retrying failed links...');
-            const retriedResults = await retryFailedLinks(failedLinks, 3); // Retry each link up to 3 times
-            allResults.push(...retriedResults);
+            await retryFailedLinks(failedLinks, 3); // Retry each link up to 3 times
         }
 
         return allResults;
@@ -80,7 +79,7 @@ async function scrapeDetails(page, links) {
     for (let link of links) {
         try {
             const fullLink = `http://missingpersons.dps.state.nm.us/mpweb/${link}`;
-            await retryNavigate(page, fullLink, 3); // Retry up to 3 times
+            await page.goto(fullLink, { waitUntil: 'networkidle2', timeout: 0 });
             console.log('Navigated to detail page:', fullLink);
 
             // Check for Oracle TNS error on the page
@@ -150,19 +149,84 @@ async function scrapeDetails(page, links) {
     return results;
 }
 
-async function retryNavigate(page, url, retries) {
+async function retryFailedLinks(links, retries) {
+    const browser = await puppeteer.launch({ headless: false });
+    const page = await browser.newPage();
+    const results = [];
+
     for (let attempt = 0; attempt < retries; attempt++) {
-        try {
-            await page.goto(url, { waitUntil: 'networkidle2', timeout: 0 });
-            return;
-        } catch (error) {
-            if (attempt < retries - 1) {
-                console.log(`Retrying to navigate to ${url}, attempt ${attempt + 1}`);
-                await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000)); // Exponential backoff
-            } else {
-                console.error(`Failed to navigate to ${url} after ${retries} attempts`);
-                throw error;
+        for (let link of links) {
+            try {
+                await page.goto(link, { waitUntil: 'networkidle2', timeout: 0 });
+                console.log(`Retry attempt ${attempt + 1}: Navigated to detail page: ${link}`);
+
+                const isOracleError = await page.evaluate(() => {
+                    return document.body.innerText.includes('TNS:no appropriate service handler found');
+                });
+
+                if (isOracleError) {
+                    console.error(`Oracle TNS error detected on page during retry: ${link}`);
+                    continue; // Skip this link and try again in the next attempt
+                }
+
+                const detail = await page.evaluate(() => {
+                    const getTextByLabel = (label) => {
+                        const td = Array.from(document.querySelectorAll('td')).find(td => td.textContent.trim() === label);
+                        return td ? td.nextElementSibling.textContent.trim() : null;
+                    };
+
+                    const nameDetails = document.querySelector('div#MPImgTxt')?.innerText.trim() || '';
+                    const [nameDetailsDate, name] = nameDetails.split(' - ');
+
+                    const photoElement = document.querySelector('img');
+                    let photoUrl = null;
+                    if (photoElement && photoElement.src.includes('image_serv?id=')) {
+                        const photoId = photoElement.src.split('id=')[1];
+                        photoUrl = `http://missingpersons.dps.state.nm.us/mpweb/image_serv?id=${photoId}`;
+                    }
+
+                    return {
+                        name: name || '',
+                        missingDate: getTextByLabel('Date Missing:'),
+                        missingFrom: getTextByLabel('Missing from:'),
+                        ageThen: getTextByLabel('Age Then:'),
+                        ageNow: getTextByLabel('Age Now:'),
+                        description: document.querySelector('td[colspan="5"]')?.innerText.trim() || '',
+                        dob: getTextByLabel('Date of Birth:'),
+                        sex: getTextByLabel('Sex:'),
+                        eyeColor: getTextByLabel('Eye Color:'),
+                        height: getTextByLabel('Height:'),
+                        weight: parseFloat(getTextByLabel('Weight:')),
+                        hairColor: getTextByLabel('Hair Color:'),
+                        race: getTextByLabel('Race:'),
+                        photo1: photoUrl
+                    };
+                });
+
+                if (!detail.photo1) {
+                    const imgElement = await page.$('img');
+                    if (imgElement) {
+                        await imgElement.click();
+                        await page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 0 });
+                        detail.photo1 = await page.evaluate(() => {
+                            const photoElement = document.querySelector('img');
+                            return photoElement ? photoElement.src : null;
+                        });
+                    }
+                }
+
+                console.log('Scraped detail during retry:', detail);
+
+                results.push(detail);
+                links = links.filter(l => l !== link); // Remove the successfully processed link
+            } catch (error) {
+                console.error(`Error while retrying detail page: ${link}`, error);
             }
         }
+        if (links.length === 0) break; // Exit if all links have been processed
+        await new Promise(res => setTimeout(res, 5000)); // Delay between retries
     }
+
+    await browser.close();
+    return results;
 }
