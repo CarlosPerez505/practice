@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaTimes } from 'react-icons/fa';
 
-const ProfileDetails = ({ profile, onClose }) => {
+const ProfilePage = ({ profile, onClose }) => {
     if (!profile) {
         return null;
     }
@@ -11,7 +11,7 @@ const ProfileDetails = ({ profile, onClose }) => {
             <div className="bg-gray-800 w-full md:w-4/5 lg:w-3/5 h-auto md:h-4/5 p-4 md:p-8 overflow-auto relative rounded-xl shadow-lg">
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-100 transition duration-200 bg-gray-700 rounded-full p-2 shadow-lg"
+                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-100 transition duration-200 bg-gray-700 rounded-full p-2 shadow-lg z-50"
                 >
                     <FaTimes size={20} />
                 </button>
@@ -50,12 +50,23 @@ const ProfileDetails = ({ profile, onClose }) => {
                         <div><strong>Hobbies and Interests:</strong> {profile.hobbiesAndInterests || 'Not available'}</div>
                     </div>
                 </div>
+                <div className="mt-4 flex justify-center">
+                    <button
+                        onClick={onClose}
+                        className="bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded-full"
+                    >
+                        Back
+                    </button>
+                </div>
             </div>
         </div>
     );
 };
 
-export default ProfileDetails;
+export default ProfilePage;
+
+
+
 
 
 
