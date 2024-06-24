@@ -10,7 +10,7 @@ import UpdateForm from './pages/AdminPage/UpdateForm';
 import PredictionComponent from './components/SearchCases/PredictionComponent';
 import Footer from './components/Footer';
 import Navbar from './components/Navbar';
-import ProfileDetails from './components/ProfileDetails';
+import ProfilePage from './pages/ProfilePage.jsx';
 import SearchCases from "./pages/AdminPage/SearchCases.jsx";
 
 function App() {
@@ -23,7 +23,7 @@ function App() {
                         <div className="main-content flex-1">
                             <Routes>
                                 <Route path="/" element={<HomePage />} />
-                                <Route path="/profile/:id" element={<ProfileDetails />} />
+                                <Route path="/profile/:id" element={<ProfilePage />} />
                                 <Route path="/admin/*" element={<AdminDash />}>
                                     <Route path="create" element={<CreateMissingCase />} />
                                     <Route path="update/:id" element={<UpdateForm />} />
@@ -41,6 +41,8 @@ function App() {
 }
 
 export default App;
+
+
 
 
 

@@ -1,19 +1,16 @@
+// src/components/ProfileCard.jsx
 import React, { useState } from 'react';
 import { FaFacebookF, FaLinkedinIn, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { useNavigate } from "react-router-dom";
 
-const ProfileCard = ({ profile, onProfileClick }) => {
+const ProfileCard = ({ profile }) => {
     const navigate = useNavigate();
     const placeholderImage = "https://via.placeholder.com/150?text=No+Image"; // Placeholder image URL
     const [imageSrc, setImageSrc] = useState(profile.photo1 || placeholderImage);
     const [isLoading, setIsLoading] = useState(true);
 
     const handleClick = () => {
-        if (window.innerWidth <= 768) {
-            navigate(`/profile/${profile.id}`);
-        } else {
-            onProfileClick(profile);
-        }
+        navigate(`/profile/${profile.id}`);
     };
 
     const handleImageLoad = () => {
@@ -63,7 +60,7 @@ const ProfileCard = ({ profile, onProfileClick }) => {
                 </div>
             </div>
             <div className="text-center py-4">
-                <button className="bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded-full">
+                <button className="bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded-full" onClick={handleClick}>
                     View Profile
                 </button>
             </div>
@@ -72,3 +69,4 @@ const ProfileCard = ({ profile, onProfileClick }) => {
 };
 
 export default ProfileCard;
+

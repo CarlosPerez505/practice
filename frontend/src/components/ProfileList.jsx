@@ -1,14 +1,11 @@
+// src/components/ProfilesList.jsx
 import React from 'react';
-import ProfileCard from './ProfileCard';
+import ProfileCard from './ProfileCard.jsx';
 
 const ProfilesList = ({ profiles, onProfileClick }) => {
-    if (!Array.isArray(profiles) || profiles.length === 0) {
-        return <div className="text-white text-center">No profiles available.</div>;
-    }
-
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {profiles.map((profile) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+            {profiles.map(profile => (
                 <ProfileCard
                     key={profile.id}
                     profile={profile}
@@ -20,4 +17,7 @@ const ProfilesList = ({ profiles, onProfileClick }) => {
 };
 
 export default ProfilesList;
+
+
+
 

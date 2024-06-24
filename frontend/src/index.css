@@ -144,6 +144,22 @@ footer {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
 }
 
+/* ... other styles ... */
+
+.bgImg::after {
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("./assets/waterDropLet.jpg"); /* Replace with the path to your splash image */
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    mix-blend-mode: lighten;
+}
+
 .chart-container {
     position: relative;
 }
@@ -157,4 +173,50 @@ footer {
     padding: 1rem;
     color: white;
     font-size: 0.875rem;
+}
+
+
+/* This will change the color of SVG in toolbar */
+.apexcharts-toolbar svg {
+    fill:  #000000 !important;
+    stroke:  #000000 !important;
+}
+
+/*This will change the background-color of the menu*/
+.apexcharts-menu {
+    background-color: #333 !important;
+}
+
+/*This will change the color of the text in the menu on hover and make the text more legible*/
+.apexcharts-menu-item:hover {
+    background-color: #555 !important;
+    color: #fff !important;
+}
+
+/*This will change the color of the text in the menu*/
+.apexcharts-menu-item {
+    color: #fff !important;
+}
+
+
+/* This will change the color of the SVG in the toolbar */
+.apexcharts-toolbar svg {
+    fill: #000000 !important;
+    stroke: #000000 !important;
+}
+
+/*This will change the background-color of the menu*/
+.apexcharts-menu {
+    background-color: #333 !important;
+}
+
+/*This will change the color of the text in the menu on hover and make it more legible*/
+.apexcharts-menu-item:hover {
+    background-color: #555 !important;
+    color: #fff !important;
+}
+
+/*This will change the color of the text in the menu*/
+.apexcharts-menu-item {
+    color: #fff !important;
 }

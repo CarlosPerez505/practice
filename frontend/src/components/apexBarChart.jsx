@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Chart from 'react-apexcharts';
 
 const apexBarChart = () => {
-    const [chartOptions, setChartOptions] = useState({
+    const [chartOptions] = useState({
         series: [{
             name: 'Net Profit',
             data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
@@ -16,7 +16,19 @@ const apexBarChart = () => {
         options: {
             chart: {
                 type: 'bar',
-                height: 350
+                height: 350,
+                toolbar: {
+                    tools: {
+                        download: true,
+                        selection: true,
+                        zoom: true,
+                        zoomin: true,
+                        zoomout: true,
+                        pan: true,
+                        reset: true
+                    },
+                    autoSelected: 'zoom'
+                }
             },
             plotOptions: {
                 bar: {
@@ -34,23 +46,37 @@ const apexBarChart = () => {
                 colors: ['transparent']
             },
             xaxis: {
+                labels: {
+                    style: {
+                        colors: '#000'
+                    },
+                },
                 categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
             },
             yaxis: {
                 title: {
-                    text: '$ (thousands)'
-                }
+                    text: '$ (thousands)',
+                    style: {
+                        color: '#000',
+                    },
+                },
+                labels: {
+                    style: {
+                        colors: '#000'
+                    },
+                },
             },
             fill: {
                 opacity: 1
             },
             tooltip: {
-                y: {
-                    formatter: function (val) {
-                        return "$ " + val + " thousands"
-                    }
+                theme: 'dark'
+            },
+            legend: {
+                labels:{
+                    colors: "#000"
                 }
-            }
+            },
         },
     });
 

@@ -1,20 +1,50 @@
-import React from 'react';
+// src/pages/ProfilePage.jsx
+import React, { useEffect, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import { FaTimes } from 'react-icons/fa';
 
-const ProfilePage = ({ profile, onClose }) => {
+const ProfilePage = () => {
+    const { id } = useParams();
+    const [profile, setProfile] = useState(null);
+    const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/missingCases/${id}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const data = await response.json();
+                setProfile(data);
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchProfile();
+    }, [id]);
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
+
     if (!profile) {
-        return null;
+        return <div>No profile data available</div>;
     }
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4 md:p-8">
             <div className="bg-gray-800 w-full md:w-4/5 lg:w-3/5 h-auto md:h-4/5 p-4 md:p-8 overflow-auto relative rounded-xl shadow-lg">
-                <button
-                    onClick={onClose}
-                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-100 transition duration-200 bg-gray-700 rounded-full p-2 shadow-lg z-50"
-                >
+                <Link to="/" className="absolute top-4 right-4 text-gray-400 hover:text-gray-100 transition duration-200 bg-gray-700 rounded-full p-2 shadow-lg">
                     <FaTimes size={20} />
-                </button>
+                </Link>
                 <div className="text-center">
                     <h1 className="text-2xl md:text-4xl font-bold mb-4 text-white">{profile.name}</h1>
                     {profile.photo1 ? (
@@ -50,23 +80,10 @@ const ProfilePage = ({ profile, onClose }) => {
                         <div><strong>Hobbies and Interests:</strong> {profile.hobbiesAndInterests || 'Not available'}</div>
                     </div>
                 </div>
-                <div className="mt-4 flex justify-center">
-                    <button
-                        onClick={onClose}
-                        className="bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded-full"
-                    >
-                        Back
-                    </button>
-                </div>
             </div>
         </div>
     );
 };
 
 export default ProfilePage;
-
-
-
-
-
 
